@@ -11,24 +11,9 @@ library(forcats)
 library(stargazer)
 library(oaxaca)
 
-NLFS <- read_dta("../../../Data/Raw/NLFS_III/Sanjeet_NLFS.dta")
 
-#stack(attr(NLFS, 'labels'))
-#labels(NLFS)
-
-#Form the wage based function, calculated on hour term with required variables
-
-nlfs_hr <- NLFS %>% 
-  select(c("psu","domain217", "hhld", "idcode", "hhsize", "b01", "b02", "b03", "b05", 
-           "b09", "b11", "b12", "b13", "b15", "b17", "b18", "b19",
-           "b20", "b21", "b22", "b23", "c04", "d02_nsco", "d03", "d04", "d05",
-           "d08", "d09", "d10", "d11a", "d12_nsic" ,"d13", "d14", "d15", "d16", "d17", "d18",
-           "d20", "e01a", "e03", "e07", "e08", "e10", "e11", "f01a", "f01b", "f01c", "f02", "f03a",
-           "f03b", "f03c", "f03d", "f03e", "f04", "f05", "f06", "i01a",
-           "i01b", "i01c", "i02", "i03_nsic", "i06", "i07", "i08", "i09",
-           "i10", "i11", "i12", "i13", "i14", "i15", "j01", "j02", "j03",
-           "j04", "j05", "j06", "urbrur753", "ilo_wgt"))
-
+nlfs_hr <- readRDS("../../../data/Raw/NLFS_III/nlfs_hr.RDS")
+dependent <- readRDS("../../../data/Raw/NLFS_III/nlfs_dependent.RDS")
 
 #computing the hourly wage for daily, weekly, monthly paid employees
 nlfs_hr <- nlfs_hr %>%
