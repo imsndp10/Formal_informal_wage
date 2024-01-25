@@ -1,0 +1,30 @@
+counterfactual ln_wage $experience $education $caste married_status_1 hh_child gender_1 $occupation $voctrain total_chores_hr overtime_1 ,,,,,
+"$firmsize $industry, group(formal_emp_1) quantiles(0.1 0.5 0.9)",,,,,
+,,,,,
+,,,,,
+The variance has been estimated by bootstraping the results 100 times.,,,,,
+,,,,,
+No. of obs. in the reference group        7590    ,,,,,
+No. of obs. in the counterfactual group   1153    ,,,,,
+,,,,,
+Quantile Treatment Effe,cts,,,,
+-----------------------,-----------,-----------,-----------,-------------,---------
+|,Pointwise,Pointw,ise,Functio,nal
+Quantile    |     QTE,Std. Err.,[95% Conf.,Interval],[95% Conf. I,nterval]
+------------+----------,-----------,-----------,-----------,-------------,---------
+.1          |   .098545,0.01793,0.063403,0.133686,0.055755,0.141334
+.5          |    .24068,0.019276,0.202901,0.27846,0.194679,0.286682
+.9          |   .395187,0.01911,0.357733,0.432641,0.349582,0.440792
+-----------------------,-----------,-----------,-----------,-------------,---------
+,,,,,
+Bootstrap inference on the counterfactual quantile processes,,,,,
+,,,,,
+|,P-va,lues,,,
+Null-hypothesis                                |,KS-statistic,CMS-statistic,,,
+-----------------------------------------------+,---------------,---------------,,,
+Correct specification of the parametric model  |,1,1,,,
+No effect: QTE(tau)=0 for all taus             |,0,0,,,
+Constant effect: QTE(tau)=QTE(0.5) for all taus|,0,0,,,
+Stochastic dominance: QTE(tau)>0 for all taus  |,0.73,0.73,,,
+Stochastic dominance: QTE(tau)<0 for all taus  |,0,0,,,
+------------------------------------------------,---------------,---------------,,,
