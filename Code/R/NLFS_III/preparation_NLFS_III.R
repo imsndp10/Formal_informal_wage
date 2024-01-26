@@ -33,19 +33,19 @@ nlfs_hr <- nlfs_hr %>%
 #read_xlsx
 
 #Link excel files to working file with required sheets
-edu_cls <- readxl::read_xlsx("/Users/sandeepsharma/Desktop/Research/Sanjeet_classification.xlsx" ,
+edu_cls <- readxl::read_xlsx("../../../data/Excel/NLFS_III/Sanjeet_classification.xlsx" ,
                   sheet = "education_III")
 
-caste_cls <- readxl::read_xlsx("/Users/sandeepsharma/Desktop/Research/Sanjeet_classification.xlsx" ,
+caste_cls <- readxl::read_xlsx("../../../data/Excel/NLFS_III/Sanjeet_classification.xlsx" ,
                             sheet = "caste_III")
 
-jobs_cls <- readxl::read_xlsx("/Users/sandeepsharma/Desktop/Research/Sanjeet_classification.xlsx" ,
+jobs_cls <- readxl::read_xlsx("../../../data/Excel/NLFS_III/Sanjeet_classification.xlsx" ,
                             sheet = "jobs_III")
 
-nsic_cls <- readxl::read_xlsx("/Users/sandeepsharma/Desktop/Research/Sanjeet_classification.xlsx" , 
+nsic_cls <- readxl::read_xlsx("../../../data/Excel/NLFS_III/Sanjeet_classification.xlsx" , 
                               sheet = "nsic")
 
-ind_cls <- readxl::read_xlsx("/Users/sandeepsharma/Desktop/Research/Sanjeet_classification.xlsx" , 
+ind_cls <- readxl::read_xlsx("../../../data/Excel/NLFS_III/Sanjeet_classification.xlsx" , 
                              sheet = "nsic_III")
 
 
@@ -64,10 +64,6 @@ industry <- nsic_cls %>%
 
 industry_na <- ind_cls %>%
   select(c("value", "ind"))
-
-dependent <- NLFS %>%
-  group_by(psu, hhld) %>%
-  summarise(hh_child = sum(b02 < 12))
 
 #typeof(nlfs_hr$d02_nsco)
 
@@ -261,4 +257,8 @@ nlfs_final<- nlfs_final %>%
            
 #Save the rds file for data set
 write_rds(nlfs_final, file = "../../../Data/Cleaned/NLFS_III/NLFS_III.RDS", compress = "gz")
+
+# Save the object in DTA format
+write_dta(nlfs_final, "../../../Data/Cleaned/NLFS_III/NLFS_III.dta")
+
 
