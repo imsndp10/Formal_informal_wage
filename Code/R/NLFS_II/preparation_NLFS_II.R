@@ -127,6 +127,26 @@ employedPop <- workingPop %>%
 
 
 formal <- employedPop %>% 
+  filter(workingClasses == "Employed") %>% 
+  mutate(formal_sector = case_when(q49 %in% c(1,2,3,4,5,6) ~ 1,
+                                   TRUE ~ 0)) %>% 
+  mutate(formal_employment = case_when(formal_sector == 1 & q45==1 ~ 1,
+                                       formal_sector == 1 & q45 %in% c(2,3)
+                                       & (q47== 1 | q48 == 1) ~ 1,
+                                       TRUE ~ 0)) %>%
+  select(c("psu", "hhid", "formal_sector", "formal_employment"))
+  
+  
+sdat <- employedPop %>% 
+  left_join(., formal, by = c("psu", "hhid")) %>% 
+  select(c("psu", "hhid", "year", "child_12", "child_5", "child_5_12", "hh_size",
+           "education", "yrs_schooling", "caste_group", "caste_group_6", "prod_hrs",
+           "chores_hrs", "tot_chores_hrs", "female", "married", "voc_train",
+           "urban", "age", "experience", "experience_sq", "workingClasses",
+           "class_5", "job_sector", "hourly_wage", "workplace", "sz_workplace",
+           "overtime_40", "migrated_fr_job", "formal_sector", "formal_employment",
+           "weight"))
+  
   
 
 
