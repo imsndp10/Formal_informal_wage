@@ -9,7 +9,7 @@ library(dplyr)
 library(ggplot2)
 library(forcats)
 library(stargazer)
-library(oaxaca)
+#library(oaxaca)
 
 
 nlfs_hr <- readRDS("../../../data/Raw/NLFS_III/nlfs_hr.RDS")
@@ -210,50 +210,69 @@ nlfs_hr <- nlfs_hr %>%
 nlfs_hr<- nlfs_hr %>%
   mutate(chores_hr = selfprod_chores/30,
          hhld_chores_hr = hhld_chores/7,
-         total_chores_hr = sum(c(chores_hr, hhld_chores_hr)))
+         total_chores_hr = sum(c(chores_hr, hhld_chores_hr)),
+         child_12 = hh_child,
+         hh_size = hhsize,
+         tot_chores_hrs = total_chores_hr,
+         female = gender,
+         married = married_status,
+         voc_train = voc_training,
+         urban = urban_place,
+         age = b02,
+         experience_sq = exp_sq,
+         workplace = firm_type,
+         sz_workplace = bsize,
+         overtime_40 = overtime,
+         migrated_fr_job = migration_work,
+         formal_sector = formal_sectors,
+         formal_employment = formal_emp,
+         weight = ilo_wgt,
+         hhid = hhld,
+         year = 2018)
   
 nlfs_final <- nlfs_hr %>% 
-    select(c("psu", "hhsize", "domain217", "education", "gender", "experience", "exp_sqr", "married_status", "urbrur753", "urban_place", "hh_child", "caste_group_6", "muluki_grp",
-             "class_5", "hourly_wage", "job_sector", "formalsect", "formal_sectors", "formal_emp", "experience", "voc_training", "firm_type", "bsize", "migration_work",
-             "underemp", "overtime", "selfprod_chores", "hhld_chores", "tot_chores" , "chores_hr", "hhld_chores_hr", "total_chores_hr", "ilo_wgt"))
+    select(c("psu", "hhid", "year", "child_12",  "hh_size", "education", 
+             "yrs_schooling", "caste_group_6",
+             "tot_chores_hrs", "female", "married", "voc_train", "urban", "age",
+             "experience", "experience_sq", "class_5", "job_sector", "hourly_wage",
+             "workplace", "sz_workplace", "overtime_40", "migrated_fr_job", 
+             "formal_sector", "formal_employment", "weight"))
 
 
-nlfs_final<- nlfs_final %>% 
-    mutate(muluki_grp = factor(muluki_grp,
-                               levels = c("tagadhari", "matwali",  "pani_nachalne")),
-           education = factor(education,
-                              levels = c("Illiterate", "Below_primary", "Primary", "Tenth_grade",
-                                         "Secondary", "Bachelor", "Masters_and_above")),
-           job_sector = factor(job_sector,
-                               levels = c("Agriculture", "Mining_quarrying",
-                                          "Construction", "Manufacturing", "Market_Services",
-                                          "Non_Market", 
-                                          "Arts_ent")),
-           firm_type = factor(firm_type,
-                              levels = c("Government", "Private_Institutions", 
-                                         "Private_Business", "others" )),
-           bsize = factor(bsize,
-                            levels = c("small_size_firm", "medium_size_firm", "large_size_firm" )),
-           class_5 = factor(class_5,
-                            levels = c("Elem_occup", 
-                                       "Plant_mach_ope",
-                                       "Skilled_agr",
-                                       "Clerical_service",
-                                       "Manag_prof_tech")),
-           formal_sectors = factor(formal_sectors,
-                                   levels = c("formal_agri", "formal_nonagri", "informal_nonagri", "informal_agri")),
-           caste_group_6 = factor(caste_group_6, levels = c("Khas", "Janajati",
-                                                             "Adhibasi", "Madhesi", 
-                                                             "Dalit", "Others")),
-           urban_place = as.factor(urban_place),
-           underemp = as.factor(underemp),
-           overtime = as.factor(overtime),
-           gender = as.factor(gender),
-           married_status = as.factor(married_status),
-           formal_emp = as.factor(formal_emp),
-           formalsect = as.factor(formalsect),
-           voc_training = as.factor(voc_training),
-           migration_work = as.factor(migration_work))
+# nlfs_final<- nlfs_final %>% 
+#     mutate(education = factor(education,
+#                               levels = c("Illiterate", "Below_primary", "Primary", "Tenth_grade",
+#                                          "Secondary", "Bachelor", "Masters_and_above")),
+#            job_sector = factor(job_sector,
+#                                levels = c("Agriculture", "Mining_quarrying",
+#                                           "Construction", "Manufacturing", "Market_Services",
+#                                           "Non_Market", 
+#                                           "Arts_ent")),
+#            firm_type = factor(firm_type,
+#                               levels = c("Government", "Private_Institutions", 
+#                                          "Private_Business", "others" )),
+#            bsize = factor(bsize,
+#                             levels = c("small_size_firm", "medium_size_firm", "large_size_firm" )),
+#            class_5 = factor(class_5,
+#                             levels = c("Elem_occup", 
+#                                        "Plant_mach_ope",
+#                                        "Skilled_agr",
+#                                        "Clerical_service",
+#                                        "Manag_prof_tech")),
+#            formal_sectors = factor(formal_sectors,
+#                                    levels = c("formal_agri", "formal_nonagri", "informal_nonagri", "informal_agri")),
+#            caste_group_6 = factor(caste_group_6, levels = c("Khas", "Janajati",
+#                                                              "Adhibasi", "Madhesi", 
+#                                                              "Dalit", "Others")),
+#            urban_place = as.factor(urban_place),
+#            underemp = as.factor(underemp),
+#            overtime = as.factor(overtime),
+#            gender = as.factor(gender),
+#            married_status = as.factor(married_status),
+#            formal_emp = as.factor(formal_emp),
+#            formalsect = as.factor(formalsect),
+#            voc_training = as.factor(voc_training),
+#            migration_work = as.factor(migration_work))
            
 #Save the rds file for data set
 write_rds(nlfs_final, file = "../../../Data/Cleaned/NLFS_III/NLFS_III.RDS", compress = "gz")

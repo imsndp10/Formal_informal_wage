@@ -38,7 +38,7 @@ industry_classify <- readxl::read_excel("../../../data/excel/NLFS_II/classificat
 ####### Variables prep ###########
 
 hchar <- wdat%>%group_by(psu, hhid)%>%
-  summarise(child_12 =sum(q10<=12),
+  summarise(child_12 =sum(q10<12),
             child_5 = sum(q10<=5),
             child_5_12 = sum(q10>5 & q10<=12),
             hh_size = n())
@@ -68,7 +68,7 @@ workingPop <- wdat%>%
   left_join(., caste_classify, by = c("q11" = "value")) %>% 
   left_join(., chores, by = c("psu", "hhid", "idcode")) %>% 
   mutate(female = if_else(q09==1, 0, 1),
-         married = case_when(q13==1 | is.na(q13) ~ "Never_married",
+         marital = case_when(q13==1 | is.na(q13) ~ "Never_married",
                              q13==2 ~ "Married",
                              TRUE   ~ "Sep_Div_Wid"),
          voc_train = if_else(q31==1&!(is.na(q31)), 1,0),
@@ -123,7 +123,8 @@ employedPop <- workingPop %>%
                                       q17==2 & q20%in%c(3,4,5,6,7)~1,
                                       q21==2 & q25%in%c(3,4,5,6,7)~1,
                                       TRUE~0),
-         weight = aweight)
+         weight = aweight,
+         married = if_else(marital == "Married", 1, 0))
 
 
 formal <- employedPop %>% 
@@ -139,15 +140,19 @@ formal <- employedPop %>%
   
 sdat <- employedPop %>% 
   left_join(., formal, by = c("psu", "hhid")) %>% 
-  select(c("psu", "hhid", "year", "child_12", "child_5", "child_5_12", "hh_size",
-           "education", "yrs_schooling", "caste_group", "caste_group_6", "prod_hrs",
-           "chores_hrs", "tot_chores_hrs", "female", "married", "voc_train",
-           "urban", "age", "experience", "experience_sq", "workingClasses",
-           "class_5", "job_sector", "hourly_wage", "workplace", "sz_workplace",
+  select(c("psu", "hhid", "year", "child_12", "hh_size",
+           "education", "yrs_schooling", "caste_group_6","tot_chores_hrs",
+           "female", "married", "voc_train",
+           "urban", "age", "experience", "experience_sq", "class_5", 
+           "job_sector", "hourly_wage", "workplace", "sz_workplace",
            "overtime_40", "migrated_fr_job", "formal_sector", "formal_employment",
            "weight"))
   
-  
+#Save the rds file for data set
+write_rds(sdat, file = "../../../Data/Cleaned/NLFS_II/NLFS_II.RDS", compress = "gz")
+
+# Save the object in DTA format
+write_dta(sdat, "../../../Data/Cleaned/NLFS_II/NLFS_II.dta")
 
 
 
