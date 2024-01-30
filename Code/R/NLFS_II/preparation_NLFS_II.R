@@ -135,13 +135,13 @@ formal <- employedPop %>%
   mutate(formal_employment = case_when(formal_sector == 1 & q45==1 ~ 1,
                                        formal_sector == 1 & q45 %in% c(2,3)
                                        & (q47== 1 | q48 == 1) ~ 1,
-                                       TRUE ~ 0)) %>%
-  select(c("psu", "hhid", "formal_sector", "formal_employment"))
+                                       TRUE ~ 0)) %>% 
+  select(c("psu", "hhid", "idcode", "formal_sector", "formal_employment"))
   
   
 sdat <- employedPop %>% 
   filter(workingClasses == "Employed") %>% 
-  left_join(., formal, by = c("psu", "hhid")) %>% 
+  left_join(., formal, by = c("psu", "hhid", "idcode")) %>% 
   select(c("psu", "hhid", "year", "child_12", "hh_size",
            "education", "yrs_schooling", "caste_group_6","tot_chores_hrs",
            "female", "married", "voc_train",
