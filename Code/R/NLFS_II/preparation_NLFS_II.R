@@ -5,6 +5,7 @@ cat("\014")
 library("tidyverse")
 library("dplyr")
 library("tidyr")
+library("haven")
 
 ##########Data Import#############
 family <- readRDS("../../../data/Raw/NLFS_II/NLFS_II_householdData.Rds")
@@ -106,18 +107,18 @@ employedPop <- workingPop %>%
         mutate(workingClasses = case_when(is.na(hourly_wage)&workingClasses=="Employed" ~ "unEmployed",
                                     !is.na(hourly_wage)& workingClasses!="Employed" ~ "Employed",
                                     TRUE ~ workingClasses)) %>% 
-        mutate(workplace = case_when(q44%in%c(2,3,4) ~ "Private business",
-                               q44%in%c(5,9) ~ "Others",
+        mutate(workplace = case_when(q44%in%c(2,3,4) ~ "Private_Business",
+                               q44%in%c(5,9) ~ "others",
                                q49%in%c(1,2,3)~ "Government",
-                               q49%in%c(5,6)~ "Private institution",
-                               q49%in%c(7)~ "Private business",
-                               q49%in%c(4,8)~ "Others"),
-         sz_workplace = case_when(q44%in%c(3) ~ "<5",
-                                  q49%in%c(1,2,3,4,5,6)~ ">=10",
-                                  q50%in%c(1,2)~ "<5",
-                                  q50%in%c(3)~ "5-9",
-                                  q50%in%c(4)~ ">=10",
-                                  q50%in%c(9)~ "<5"),
+                               q49%in%c(5,6)~ "Private_Institution",
+                               q49%in%c(7)~ "Private_Business",
+                               q49%in%c(4,8)~ "others"),
+         sz_workplace = case_when(q44%in%c(3) ~ "small_size_firm",
+                                  q49%in%c(1,2,3,4,5,6)~ "large_size_firm",
+                                  q50%in%c(1,2)~ "small_size_firm",
+                                  q50%in%c(3)~ "medium_size_firm",
+                                  q50%in%c(4)~ "large_size_firm",
+                                  q50%in%c(9)~ "small_size_firm"),
          overtime_40 = if_else(q63>40, 1, 0),
          migrated_fr_job = case_when( q17==1 & q21==1~0,
                                       q17==2 & q20%in%c(3,4,5,6,7)~1,
@@ -139,6 +140,7 @@ formal <- employedPop %>%
   
   
 sdat <- employedPop %>% 
+  filter(workingClasses == "Employed") %>% 
   left_join(., formal, by = c("psu", "hhid")) %>% 
   select(c("psu", "hhid", "year", "child_12", "hh_size",
            "education", "yrs_schooling", "caste_group_6","tot_chores_hrs",
