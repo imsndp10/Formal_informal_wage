@@ -180,7 +180,7 @@ nlfs_hr<- nlfs_hr%>%
                            d13 %in% c(1, 2, 5) ~ "large_size_firm",
                            d11a == 2 ~ "small_size_firm")) %>% 
   mutate(firm_type = case_when(d11a == 1 & d13 %in% c(1,2) ~ "Government",
-                                        d11a == 1 & d13 %in% c(3,4) ~ "Private_Institutions",
+                                        d11a == 1 & d13 %in% c(3,4) ~ "Private_Institution",
                                         d11a == 1 & d13 %in% c(5,6,7) ~ "others",
                                         d11a == 2 ~ "others",
                                         d11a == 3 & d14 == 1 ~ "Private_Business",
