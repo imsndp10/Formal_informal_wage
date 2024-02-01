@@ -224,7 +224,7 @@ nlfs_hr<- nlfs_hr %>%
          sz_workplace = bsize,
          overtime_40 = overtime,
          migrated_fr_job = migration_work,
-         formal_sector = formal_sectors,
+         formal_sector = formalsect,
          formal_employment = formal_emp,
          weight = ilo_wgt,
          hhid = hhld,
