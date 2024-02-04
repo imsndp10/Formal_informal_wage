@@ -33,8 +33,6 @@ merged<- merged %>%
                                        "Skilled_agriculture_Trades_workers",
                                        "Clerical_Service_Sales_workers",
                                        "Managers_Professionals_Technicians")),
-           formal_sector = factor(formal_sector,
-                                   levels = c("formal_agri", "formal_nonagri", "informal_nonagri", "informal_agri")),
            caste_group_6 = factor(caste_group_6, levels = c("Khas", "Janajati",
                                                              "Adhibasi", "Madhesi",
                                                              "Dalit", "Others")))
