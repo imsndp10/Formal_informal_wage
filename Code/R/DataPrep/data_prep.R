@@ -18,10 +18,10 @@ merged<- merged %>%
                               levels = c("Illiterate", "Below_primary", "Primary", "Tenth_grade",
                                          "Secondary", "Bachelor", "Masters_above")),
            job_sector = factor(job_sector,
-                               levels = c("Agriculture", "Mining_quarrying_Electricity_gas_water_supply",
+                               levels = c("Agriculture", "Mining_utility",
                                           "Construction", "Manufacturing", "Market_services",
                                           "Non_Market_services",
-                                          "Arts_entertainment_Other_services")),
+                                          "Arts_entertain")),
            workplace = factor(workplace,
                               levels = c("Government", "Private_Institution",
                                          "Private_Business", "others" )),
@@ -30,9 +30,9 @@ merged<- merged %>%
            class_5 = factor(class_5,
                             levels = c("Elementary_occupations",
                                        "Plant_operator",
-                                       "Skilled_agriculture_Trades_workers",
-                                       "Clerical_Service_Sales_workers",
-                                       "Managers_Professionals_Technicians")),
+                                       "Agri_trade",
+                                       "Clerical_sales",
+                                       "Managers")),
            caste_group_6 = factor(caste_group_6, levels = c("Khas", "Janajati",
                                                              "Adhibasi", "Madhesi",
                                                              "Dalit", "Others")))
@@ -45,9 +45,12 @@ merged<- merged %>%
            # voc_train = as.factor(voc_train),
            # migrated_fr_job = as.factor(migrated_fr_job))
 #Save the rds file for data set
-write_rds(merged, file = "../../../Data/Cleaned/Pooled/Pooled.RDS", compress = "gz")
+
+merged2 <- fastDummies::dummy_cols(merged, remove_first_dummy = TRUE)
+
+write_rds(merged2, file = "../../../Data/Cleaned/Pooled/Pooled.RDS", compress = "gz")
 
 # Save the object in DTA format
-write_dta(merged, "../../../Data/Cleaned/Pooled/Pooled.dta")
+write_dta(merged2, "../../../Data/Cleaned/Pooled/Pooled.dta")
 
 

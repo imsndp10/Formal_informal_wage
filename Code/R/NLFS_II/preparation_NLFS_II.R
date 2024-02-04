@@ -149,7 +149,7 @@ sdat <- employedPop %>%
            "job_sector", "hourly_wage", "workplace", "sz_workplace",
            "overtime_40", "migrated_fr_job", "formal_sector", "formal_employment",
            "weight"))
-  
+labelled::var_label(sdat) <- NULL  
 #Save the rds file for data set
 write_rds(sdat, file = "../../../Data/Cleaned/NLFS_II/NLFS_II.RDS", compress = "gz")
 

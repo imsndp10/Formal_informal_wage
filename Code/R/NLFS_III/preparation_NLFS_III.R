@@ -237,7 +237,7 @@ nlfs_final <- nlfs_hr %>%
              "experience", "experience_sq", "class_5", "job_sector", "hourly_wage",
              "workplace", "sz_workplace", "overtime_40", "migrated_fr_job", 
              "formal_sector", "formal_employment", "weight"))
-
+labelled::var_label(nlfs_final) <- NULL
 
 # nlfs_final<- nlfs_final %>% 
 #     mutate(education = factor(education,
