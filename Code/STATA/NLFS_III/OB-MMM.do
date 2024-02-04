@@ -1,7 +1,7 @@
 clear
 set more off
-//cd "/Users/sandeepsharma/Desktop/Research/Data Analysis/Formal informal wage/Formal_informal_wage/Data/Cleaned/NLFS_III"
-cd "D:/Work/Sandeep_research/Data/Cleaned/Pooled"
+cd "/Users/sandeepsharma/Desktop/Research/Data Analysis/Formal informal wage/Formal_informal_wage/Data/Cleaned/Pooled"
+//cd "D:/Work/Sandeep_research/Data/Cleaned/Pooled"
 use Pooled.dta
 gen ln_wage = ln(hourly_wage)
 label define formal_employment 0 "Informal Employment" 1 "Formal Employment"
