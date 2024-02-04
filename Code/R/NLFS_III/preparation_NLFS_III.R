@@ -123,7 +123,7 @@ nlfs_hr <- nlfs_hr %>%
   mutate(hourly_wage = if_else(hourly_wage >= 800, avgwage,
                                    if_else(hourly_wage <= 13, avgwage, hourly_wage))) %>% 
   mutate(hourly_wage = if_else(hourly_wage <= 13, avgwage,
-           if_else(hourly_wage >= 500 & class_5 %in% c("Elem_occup", "Plant_mach_ope"), avgwage, hourly_wage)))
+           if_else(hourly_wage >= 500 & class_5 %in% c("Elementary_occupations", "Plant_operator"), avgwage, hourly_wage)))
 
 nlfs_hr <-nlfs_hr %>%
   mutate(job_sector = if_else(is.na(job_sector), ind, job_sector))
