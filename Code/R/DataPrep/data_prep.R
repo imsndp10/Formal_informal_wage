@@ -8,8 +8,7 @@ library("tidyr")
 library("haven")
 
 ##########Data Import#############
-nlfs_II <- readRDS("../../../data/Cleaned/NLFS_II/NLFS_II.Rds") %>% 
-  filter(!is.na(formal_employment))
+nlfs_II <- readRDS("../../../data/Cleaned/NLFS_II/NLFS_II.Rds") 
 nlfs_III <- readRDS("../../../data/Cleaned/NLFS_III/NLFS_III.Rds")
 
 merged <- rbind(nlfs_II, nlfs_III)
@@ -38,13 +37,19 @@ merged<- merged %>%
                                    levels = c("formal_agri", "formal_nonagri", "informal_nonagri", "informal_agri")),
            caste_group_6 = factor(caste_group_6, levels = c("Khas", "Janajati",
                                                              "Adhibasi", "Madhesi",
-                                                             "Dalit", "Others")),
-           urban = as.factor(urban),
-           overtime_40 = as.factor(overtime_40),
-           female = as.factor(female),
-           married = as.factor(married),
-           formal_employment = as.factor(formal_employment),
-           formal_sector = as.factor(formal_sector),
-           voc_train = as.factor(voc_train),
-           migrated_fr_job = as.factor(migrated_fr_job))
+                                                             "Dalit", "Others")))
+           # urban = as.factor(urban),
+           # overtime_40 = as.factor(overtime_40),
+           # female = as.factor(female),
+           # married = as.factor(married),
+           # formal_employment = as.factor(formal_employment),
+           # formal_sector = as.factor(formal_sector),
+           # voc_train = as.factor(voc_train),
+           # migrated_fr_job = as.factor(migrated_fr_job))
+#Save the rds file for data set
+write_rds(merged, file = "../../../Data/Cleaned/Pooled/Pooled.RDS", compress = "gz")
+
+# Save the object in DTA format
+write_dta(merged, "../../../Data/Cleaned/Pooled/Pooled.dta")
+
 
