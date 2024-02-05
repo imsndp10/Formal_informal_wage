@@ -69,9 +69,8 @@ workingPop <- wdat%>%
   left_join(., caste_classify, by = c("q11" = "value")) %>% 
   left_join(., chores, by = c("psu", "hhid", "idcode")) %>% 
   mutate(female = if_else(q09==1, 0, 1),
-         marital = case_when(q13==1 | is.na(q13) ~ "Never_married",
-                             q13==2 ~ "Married",
-                             TRUE   ~ "Sep_Div_Wid"),
+         married = case_when(q13==2 ~ 1,
+                             TRUE   ~ 0),
          voc_train = if_else(q31==1&!(is.na(q31)), 1,0),
          urban = if_else(urbrurl==1, 1, 0),
          education = case_when(q26 ==2 & is.na(q28) &q29==2 ~ "Illiterate",
@@ -124,8 +123,7 @@ employedPop <- workingPop %>%
                                       q17==2 & q20%in%c(3,4,5,6,7)~1,
                                       q21==2 & q25%in%c(3,4,5,6,7)~1,
                                       TRUE~0),
-         weight = aweight,
-         married = if_else(marital == "Married", 1, 0))
+         weight = aweight)
 
 
 formal <- employedPop %>% 
