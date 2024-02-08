@@ -46,7 +46,7 @@ merged<- merged %>%
            # migrated_fr_job = as.factor(migrated_fr_job))
 #Save the rds file for data set
 
-merged2 <- fastDummies::dummy_cols(merged, remove_first_dummy = TRUE)
+merged2 <- fastDummies::dummy_cols(merged, remove_first_dummy = FALSE)
 
 write_rds(merged2, file = "../../../Data/Cleaned/Pooled/Pooled.RDS", compress = "gz")
 
