@@ -58,3 +58,4 @@ stargazer(formal18reg, informal18reg, title = "2018 regression result", align = 
 
 #Saving the pooled regression
 stargazer(formal08reg, informal08reg, formal18reg, informal18reg, title = "Pooled regression result", align = TRUE, type = "text", out = "../../../Output/Tables/Pooled_initial_reg_stat.txt")
+
