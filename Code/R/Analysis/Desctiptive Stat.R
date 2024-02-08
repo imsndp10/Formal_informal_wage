@@ -8,6 +8,10 @@ library(plm)
 library(ggplot2) 
 library(stargazer)
 
+#loading data
+merged <- readRDS("Pooled.RDS")
+
+#Filtering formal and informal for year 2008 and 2018
 test08 <- merged %>%
   filter(year==2008)
 
@@ -26,6 +30,7 @@ formaltest18 <- test18 %>%
 informaltest18 <- test18 %>%
   filter(formal_employment == 0)
 
+#Regression statistics
 
 formal08reg <- lm(log(hourly_wage) ~ experience + experience_sq + education + female + hh_size +
                     caste_group_6 + married + child_12 + voc_train + migrated_fr_job +
@@ -51,4 +56,5 @@ informal18reg <- lm(log(hourly_wage) ~ experience + experience_sq + education + 
 
 stargazer(formal18reg, informal18reg, title = "2018 regression result", align = TRUE, type = "text", out = "../../../Output/Tables/2018_initial_reg_stat.txt")
 
+#Saving the pooled regression
 stargazer(formal08reg, informal08reg, formal18reg, informal18reg, title = "Pooled regression result", align = TRUE, type = "text", out = "../../../Output/Tables/Pooled_initial_reg_stat.txt")
