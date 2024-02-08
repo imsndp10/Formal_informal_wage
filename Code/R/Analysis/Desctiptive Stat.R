@@ -9,7 +9,7 @@ library(ggplot2)
 library(stargazer)
 
 #loading data
-merged <- readRDS("Pooled.RDS")
+merged <- readRDS("../../../data/Cleaned/Pooled/Pooled.RDS")
 
 #Filtering formal and informal for year 2008 and 2018
 test08 <- merged %>%
