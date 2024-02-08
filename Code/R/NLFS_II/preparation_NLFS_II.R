@@ -123,7 +123,8 @@ employedPop <- workingPop %>%
                                       q17==2 & q20%in%c(3,4,5,6,7)~1,
                                       q21==2 & q25%in%c(3,4,5,6,7)~1,
                                       TRUE~0),
-         weight = aweight)
+         weight = aweight) %>% 
+  filter(job_sector != "Agriculture")
 
 
 formal <- employedPop %>% 

@@ -18,7 +18,7 @@ merged<- merged %>%
                               levels = c("Illiterate", "Below_primary", "Primary", "Tenth_grade",
                                          "Secondary", "Bachelor", "Masters_above")),
            job_sector = factor(job_sector,
-                               levels = c("Agriculture", "Mining_utility",
+                               levels = c("Mining_utility",
                                           "Construction", "Manufacturing", "Market_services",
                                           "Non_Market_services",
                                           "Arts_entertain")),

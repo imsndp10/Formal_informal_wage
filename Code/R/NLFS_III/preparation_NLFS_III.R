@@ -134,7 +134,7 @@ nlfs_hr <- nlfs_hr %>%
   mutate(agr = case_when(job_sector == "Agriculture"  ~ 1,
                          TRUE ~ 0))
                                 
-nlfs_hr <- nlfs_hr %>% 
+nlfs_hr <- nlfs_hr %>%
   mutate(formalsect = case_when(d11a == 1 & d13 %in% c(1, 2, 5) ~ 1,
                                 d11a == 1 & d13 %in% c(3, 4, 6, 7) & d14 == 1 ~ 1,
                                 d11a == 1 & d13 %in% c(3, 4, 6, 7) & d14 %in% c(2,3) & d15 == 1 ~ 1,
@@ -142,19 +142,15 @@ nlfs_hr <- nlfs_hr %>%
                                 d11a == 3 & d14 %in% c(2, 3) & d15 == 1 ~ 1,
                                 TRUE ~ 0))
 
-nlfs_hr <- nlfs_hr %>%
- mutate(formal_sectors = case_when(agr == 1 & formalsect == 1 ~ "formal_agri",
-                                   agr != 1 & formalsect == 1 ~ "formal_nonagri",
-                                   agr == 1 & formalsect == 0 ~ "informal_agri",
-                                   TRUE ~ "informal_nonagri"))
 
 #ggplot(data = nlfs_hr, ) + geom_point(mapping = aes(x = hourly_wage, y = education, color = "red"))
 
 #selecting the formal and informal employment
 nlfs_hr <- nlfs_hr %>%
-  mutate(formal_emp = case_when(agr == 1 & formalsect == 1 ~ 1,
-                                agr != 1 & d03 %in% c(1, 2) & (d09 == 1 | d10 ==1 ) & d08 == 1 ~ 1,
-                                agr != 1 & d03 == 6 & formalsect == 1 ~ 1,
+  filter(agr == 0) %>% 
+  mutate(formal_emp = case_when(d03 %in% c(1,2) & d05 == 1 ~1,
+                                d03 %in% c(1, 2) & d05 == 2 &
+                                (d09 == 1 | d10 ==1 | d08 == 1) ~ 1,
                                 TRUE ~ 0))
 
 
