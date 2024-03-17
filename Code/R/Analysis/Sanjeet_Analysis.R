@@ -17,7 +17,8 @@ merged <- readRDS("../../../Data/Cleaned/Pooled/Pooled.RDS") %>%
             avg_Wage    = mean(hourly_wage)) %>% 
   mutate(treat = case_when(caste_group_6 != "Khas" & year == 2018 &
                           formal_employment == 1 ~ 1,
-                          female == 1 & year == 2018 & formal_employment == 1 ~ 1,
+                          female == 1 & year == 2018 & 
+                          formal_employment == 1 ~ 1,
                     TRUE ~0))
 
 
