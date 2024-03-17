@@ -12,7 +12,7 @@ family <- readRDS("../../../data/Raw/NLFS_III/NLFS_III_householdData.Rds")
 absent <- readRDS("../../../data/Raw/NLFS_III/NLFS_III_absenteeData.Rds")
 
 
-
+wdat <- sjlabelled::remove_all_labels(wdat)
 
 hchar <- wdat%>%group_by(psu, hhld)%>%
   summarise(child_12 =sum(age<=12),
@@ -116,7 +116,7 @@ workingPop <- wdat%>%
                                     seek30==1 & seektype%in%c(1,3)  ~ "unEmployed",
                                     seek30==2 & jobfixed==1 & seektype%in%c(1,3) ~ "unEmployed",
                                     TRUE ~ "Other"))
-workingPop <- sjlabelled::remove_all_labels(workingPop)
+
 
 
 employedPop <- workingPop%>%
