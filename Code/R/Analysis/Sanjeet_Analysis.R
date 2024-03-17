@@ -4,58 +4,21 @@ setwd(dirname(rstudioapi::getSourceEditorContext()$path))
 cat("\014") 
 
 library(dplyr)
-library(plm)
-library(ggplot2) 
-library(stargazer)
-
 #loading data
-merged <- readRDS("../../../data/Cleaned/Pooled/Pooled.RDS")
+merged <- readRDS("../../../Data/Cleaned/Pooled/Pooled.RDS") %>% 
+  filter(age >= 35 & age <= 45)%>%
+  mutate(per = ntile(n = 100,hourly_wage)) %>% 
+  filter(per <= 97 & per >= 3) %>% 
+  mutate(real_wage = case_when(year == 2008 ~ hourly_wage/(53.2/100),
+                               year == 2018 ~ hourly_wage/(119.6/100))) %>%  
+  group_by(caste_group_6, formal_employment, year, female) %>% 
+  summarise(size = n(),
+            avg_RelWage = mean(real_wage),
+            avg_Wage    = mean(hourly_wage)) %>% 
+  mutate(treat = case_when(caste_group_6 != "Khas" & year == 2018 &
+                          formal_employment == 1 ~ 1,
+                          female == 1 & year == 2018 & formal_employment == 1 ~ 1,
+                    TRUE ~0))
 
-#Filtering formal and informal for year 2008 and 2018
-test08 <- merged %>%
-  filter(year==2008)
 
-test18 <- merged %>%
-  filter(year==2018)
-
-formaltest08 <- test08 %>%
-  filter(formal_employment == 1)
-
-informaltest08 <- test08 %>%
-  filter(formal_employment == 0)
-
-formaltest18 <- test18 %>%
-  filter(formal_employment == 1)
-
-informaltest18 <- test18 %>%
-  filter(formal_employment == 0)
-
-#Regression statistics
-
-formal08reg <- lm(log(hourly_wage) ~ experience + experience_sq + education + female + hh_size +
-                    caste_group_6 + married + child_12 + voc_train + migrated_fr_job +
-                    tot_chores_hrs + urban + overtime_40,
-                  weights = weight, data = formaltest08)
-
-informal08reg <- lm(log(hourly_wage) ~ experience + experience_sq + education + female + hh_size +
-                      caste_group_6 + married + child_12 + voc_train + migrated_fr_job +
-                      tot_chores_hrs + urban + overtime_40,
-                    weights = weight, data = informaltest08)
-
-stargazer(formal08reg, informal08reg, title = "2008 regression result", align = TRUE, type = "text", out = "../../../Output/Tables/2008_initial_reg_stat.txt")
-
-formal18reg <- lm(log(hourly_wage) ~ experience + experience_sq + education + female + hh_size +
-                    caste_group_6 + married + child_12 + voc_train + migrated_fr_job +
-                    tot_chores_hrs + urban + overtime_40,
-                  weights = weight, data = formaltest18)
-
-informal18reg <- lm(log(hourly_wage) ~ experience + experience_sq + education + female + hh_size +
-                    caste_group_6 + married + child_12 + voc_train + migrated_fr_job +
-                    tot_chores_hrs + urban + overtime_40,
-                  weights = weight, data = informaltest18)
-
-stargazer(formal18reg, informal18reg, title = "2018 regression result", align = TRUE, type = "text", out = "../../../Output/Tables/2018_initial_reg_stat.txt")
-
-#Saving the pooled regression
-stargazer(formal08reg, informal08reg, formal18reg, informal18reg, title = "Pooled regression result", align = TRUE, type = "text", out = "../../../Output/Tables/Pooled_initial_reg_stat.txt")
 

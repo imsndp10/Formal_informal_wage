@@ -7,9 +7,9 @@ library("dplyr")
 library("tidyr")
 
 ###DataImport####
-wdat <- readRDS("../../../data/Raw/NLFS_III/NLFS_III_personalData.Rds")
-family <- readRDS("../../../data/Raw/NLFS_III/NLFS_III_householdData.Rds")
-absent <- readRDS("../../../data/Raw/NLFS_III/NLFS_III_absenteeData.Rds")
+wdat <- readRDS("../../../Data/Raw/NLFS_III/NLFS_III_personalData.Rds")
+family <- readRDS("../../../Data/Raw/NLFS_III/NLFS_III_householdData.Rds")
+absent <- readRDS("../../../Data/Raw/NLFS_III/NLFS_III_absenteeData.Rds")
 
 
 wdat <- sjlabelled::remove_all_labels(wdat)
@@ -32,19 +32,19 @@ weight <- wdat %>%
 
 
 #Link excel files to working file with required sheets
-edu_cls <- readxl::read_xlsx("../../../data/Excel/NLFS_III/Sanjeet_classification.xlsx" ,
+edu_cls <- readxl::read_xlsx("../../../Data/Excel/NLFS_III/Sanjeet_classification.xlsx" ,
                              sheet = "education_III")
 
-caste_cls <- readxl::read_xlsx("../../../data/Excel/NLFS_III/Sanjeet_classification.xlsx" ,
+caste_cls <- readxl::read_xlsx("../../../Data/Excel/NLFS_III/Sanjeet_classification.xlsx" ,
                                sheet = "caste_III")
 
-jobs_cls <- readxl::read_xlsx("../../../data/Excel/NLFS_III/Sanjeet_classification.xlsx" ,
+jobs_cls <- readxl::read_xlsx("../../../Data/Excel/NLFS_III/Sanjeet_classification.xlsx" ,
                               sheet = "jobs_III")
 
-nsic_cls <- readxl::read_xlsx("../../../data/Excel/NLFS_III/Sanjeet_classification.xlsx" , 
+nsic_cls <- readxl::read_xlsx("../../../Data/Excel/NLFS_III/Sanjeet_classification.xlsx" , 
                               sheet = "nsic")
 
-ind_cls <- readxl::read_xlsx("../../../data/Excel/NLFS_III/Sanjeet_classification.xlsx" , 
+ind_cls <- readxl::read_xlsx("../../../Data/Excel/NLFS_III/Sanjeet_classification.xlsx" , 
                              sheet = "nsic_III")
 
 
@@ -160,9 +160,28 @@ employedPop <- workingPop%>%
                                       last_res==2 & reason_here%in%c(3,4,5,6,7)~1,
                                       TRUE~0),
          weight = wt_prov_ind_year,
-         hhid = hhld) 
+         hhid = hhld)
 
-sdat <- employedPop%>%
+edat <- employedPop %>% 
+  filter(job_sector != "Agriculture") %>% 
+  filter(workingClasses %in% c("Employed", "selfEmployed")) %>% 
+  mutate(formalsect = case_when(mwrk_place == 1 & mwrk_orgtype %in% c(1,2,5) ~ 1,
+                                mwrk_place == 1 & mwrk_orgtype %in% c(3,4,6,7) &
+                                  mwrk_enttype == 1 ~ 1,
+                                mwrk_place == 1 & mwrk_orgtype %in% c(3,4,6,7) &
+                                  mwrk_enttype %in% c(2,3) & mwrk_entregd == 1 ~ 1,
+                                mwrk_place == 3 & mwrk_enttype == 1 ~ 1,
+                                mwrk_place == 3 & mwrk_enttype %in% c(2, 3) & mwrk_entregd == 1 ~ 1,
+                                TRUE ~ 0)) %>%  
+  mutate(formal_emp = case_when(workingClasses == "Employed" &
+                               (mwrk_soc_secu == 1 | 
+                                mwrk_pdannlve ==1 | 
+                                mwrk_pdsicklve == 1) ~ 1,
+                                workingClasses == "selfEmployed" &
+                                formalsect == 1 ~ 1,
+                                TRUE ~ 0))
+
+sdat <- edat%>%
   select(c("year", "hhid", "dist", "urban", "weight", "child_12", "child_5", "child_5_12", "hh_size", 
            "caste_group_6", "female", "married", "education", "yrs_schooling", "current_schooling",
            "experience", "experience_sq", "voc_train", "prod_hrs", "chores_hrs", "tot_chores_hrs",
