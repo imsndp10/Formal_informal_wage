@@ -22,4 +22,9 @@ merged <- readRDS("../../../Data/Cleaned/Pooled/Pooled.RDS") %>%
                     TRUE ~0))
 
 
-
+data <- readRDS("../../../Data/Cleaned/Pooled/Pooled.RDS") %>% 
+  filter(!is.na(hourly_wage)) %>%
+  filter(year == 2018) %>% 
+  group_by(job_sector) %>% 
+  summarise(formal = sum(formal_employment),
+            informal = sum((formal_employment - 1) * -1))
