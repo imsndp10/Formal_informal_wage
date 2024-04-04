@@ -17,46 +17,52 @@ dataGen <- function(Year, Gender = c("all", "male", "female"),
     mutate(log_wage = log(hourly_wage)) %>% 
     filter(year == Year)
   if(Gender == "male"){
-    data <- data %>% 
+    gendata <- data %>% 
       filter(female == 0)
   }
   if(Gender == "female"){
-    data <- data %>% 
+    gendata <- data %>% 
       filter(female == 1)
+  }else{
+    gendata <- data
   }
   if(region == "urban"){
-    data <- data %>% 
+    regdata <- gendata %>% 
       filter(urban ==1)
   }
   if(region == "rural"){
-    data <- data %>% 
+    regdata <- gendata %>% 
       filter(urban == 0)
+  }else{
+    regdata <- gendata
   }
   if(industry == "man"){
-    data <- data %>% 
+    inddata <- regdata %>% 
       filter(job_sector %in% c("Manufacturing"))
   }
   if(industry == "ser"){
-    data <- data %>% 
+    inddata <- regdata %>% 
       filter(job_sector %in% c("Market_services", "Non_Market_services",
                                "Arts_entertain"))
   }
   if(industry == "man_ser"){
-    data <- data %>% 
+    inddata <- regdata %>% 
       filter(job_sector %in% c("Manufacturing", "Market_services", "Non_Market_services",
                                "Arts_entertain"))
+  }else{
+    inddata <- regdata
   }
-  return(data)
+  return(inddata)
 }
 
+
+a <- dataGen(Year = 2008,Gender = "all", region = "all",industry = "all")
 
 CounterFac <- function(Year, Gender = c("all", "male", "female"), 
                        region = c("all", "urban", "rural"),
                        industry = c("all", "man", "ser", "man_ser"), 
                        formType = c("HH", "JM_NoInd", "JM_Ind"), reg){
-  data <- dataGen(Year, Gender = c("all", "male", "female"), 
-                  region = c("all", "urban", "rural"),
-                  industry = c("all", "man", "ser", "man_ser"))
+  data <- dataGen(Year, Gender,region,industry)
   HH <- as.formula("log_wage ~ education + experience + experience_sq +
                        married + hh_size + child_12 + voc_train + tot_chores_hrs")
   HH_female <- update.formula(HH, . ~ . + female)
