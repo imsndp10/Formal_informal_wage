@@ -116,7 +116,7 @@ CounterFac <- function(Year, Gender = c("all", "male", "female"),
   )
   file_name <- paste0(Year, "_", "gender_", Gender, "_", "region_", region, "_",
                       "industry_",industry, "_", formType)
-  return(write_rds(x = estimates, file = paste0("../../../Data/Cleaned/Pooled/Counterfactual/", file_name, ".RDS"),
+  return(write_rds(x = estimates, file = paste0("../../../Data/Cleaned/Pooled/test/", file_name, ".RDS"),
                    compress = "gz"))
 }  
 
@@ -125,7 +125,7 @@ a <- CounterFac(Year = 2018,Gender = "all", region = "all",industry = "all",form
                 reg = 2)
 
 b <- CounterFac(Year = 2018,Gender = "all", region = "all",industry = "all",formType = "JM_NoInd",
-                reg = 2)
+                reg = 100)
 
 c <- CounterFac(Year = 2018,Gender = "all", region = "all", industry = "man" ,formType = "JM_NoInd",
                 reg = 2)
@@ -137,7 +137,7 @@ e <- CounterFac(Year = 2018,Gender = "all", region = "all", industry = "man_ser"
                 reg = 2)
 
 f <- CounterFac(Year = 2008,Gender = "all", region = "all",industry = "all",formType = "JM_NoInd",
-                reg = 2)
+                reg = 100)
 
 g <- CounterFac(Year = 2008,Gender = "all", region = "all", industry = "man" ,formType = "JM_NoInd",
                 reg = 2)
