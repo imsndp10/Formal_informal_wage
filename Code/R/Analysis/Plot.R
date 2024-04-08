@@ -63,9 +63,19 @@ plotdat <- pivot_wider(data = pdat, names_from = estimate,
   filter(tau <=0.95 & tau >=0.05)
 
 plot <- ggplot(data = plotdat)+
-  geom_line(aes(x = tau, y = coefficient, color = as.factor(year)))+
-  geom_ribbon(aes(x = tau, ymin=lower, ymax = upper, color = as.factor(year)), linetype = 3, alpha = 0.1)+
-  facet_grid(cols = vars(Effect))
+  geom_line(aes(x = tau, y = coefficient, color = as.factor(year)),show.legend = FALSE)+
+  geom_ribbon(aes(x = tau, ymin=lower, ymax = upper, alpha = 0.2,
+                  fill = as.factor(year)),
+              linetype = 3, alpha = 0.1) +
+  facet_grid(cols = vars(Effect))+
+  labs(x = "tau",
+       y = "Log hourly wage",
+       fill = "Year")  +
+  geom_hline(yintercept = 0, linetype = "dashed", linewidth = 0.8)+
+  theme_bw()+
+  theme(panel.grid.minor = element_blank(),
+        legend.position = "top")
+
 
 
 
