@@ -138,8 +138,10 @@ d <- CounterFac(Year = 2018,Gender = "all", region = "all", industry = "ser" ,fo
 e <- CounterFac(Year = 2018,Gender = "all", region = "all", industry = "man_ser" ,formType = "JM_NoInd",
                 reg = 2)
 
+tictoc::tic()
 f <- CounterFac(Year = 2008,Gender = "all", region = "all",industry = "all",formType = "JM_NoInd",
                 reg = 100)
+tictoc::toc()
 
 g <- CounterFac(Year = 2008,Gender = "all", region = "all", industry = "man" ,formType = "JM_NoInd",
                 reg = 2)
