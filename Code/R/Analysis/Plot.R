@@ -60,7 +60,7 @@ pdat <- longtest %>%
 
 plotdat <- pivot_wider(data = pdat, names_from = estimate,
                        values_from = value) %>% 
-  filter(tau <=0.96 & tau >=0.04)
+  filter(tau <=0.95 & tau >=0.05)
 
 plot <- ggplot(data = plotdat)+
   geom_line(aes(x = tau, y = coefficient, color = as.factor(year)))+
