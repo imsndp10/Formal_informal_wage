@@ -17,46 +17,41 @@ dataGen <- function(Year, Gender = c("all", "male", "female"),
     mutate(log_wage = log(hourly_wage)) %>% 
     filter(year == Year)
   if(Gender == "male"){
-    gendata <- data %>% 
+    data <- data %>% 
       filter(female == 0)
   }
   if(Gender == "female"){
-    gendata <- data %>% 
+    data <- data %>% 
       filter(female == 1)
-  }else{
-    gendata <- data
   }
+  
   if(region == "urban"){
-    regdata <- gendata %>% 
+    data <- data %>% 
       filter(urban ==1)
   }
   if(region == "rural"){
-    regdata <- gendata %>% 
+    data <- data %>% 
       filter(urban == 0)
-  }else{
-    regdata <- gendata
   }
   if(industry == "man"){
-    inddata <- regdata %>% 
+    data <- data %>% 
       filter(job_sector %in% c("Manufacturing"))
   }
   if(industry == "ser"){
-    inddata <- regdata %>% 
+    data <- data %>% 
       filter(job_sector %in% c("Market_services", "Non_Market_services",
                                "Arts_entertain"))
   }
   if(industry == "man_ser"){
-    inddata <- regdata %>% 
+    data <- data %>% 
       filter(job_sector %in% c("Manufacturing", "Market_services", "Non_Market_services",
                                "Arts_entertain"))
-  }else{
-    inddata <- regdata
   }
-  return(inddata)
+  return(data)
 }
 
 
-a <- dataGen(Year = 2008,Gender = "all", region = "all",industry = "all")
+a <- dataGen(Year = 2008,Gender = "all", region = "all",industry = "ser")
 
 CounterFac <- function(Year, Gender = c("all", "male", "female"), 
                        region = c("all", "urban", "rural"),
@@ -103,7 +98,8 @@ CounterFac <- function(Year, Gender = c("all", "male", "female"),
                             printdeco = TRUE,
                             decomposition = TRUE,
                             sepcore = TRUE,
-                            ncore= 3)
+                            ncore= 3,
+                            firs)
   estimates <- data.frame(
     duqf_SE = (logitres$resSE)[,1], 
     l.duqf_SE = (logitres$resSE)[,3], 
@@ -133,7 +129,7 @@ c <- CounterFac(Year = 2018,Gender = "all", region = "all", industry = "man" ,fo
                 reg = 2)
 
 d <- CounterFac(Year = 2018,Gender = "all", region = "all", industry = "ser" ,formType = "JM_NoInd",
-                reg = 2)
+                reg = 100)
 
 e <- CounterFac(Year = 2018,Gender = "all", region = "all", industry = "man_ser" ,formType = "JM_NoInd",
                 reg = 2)
@@ -144,10 +140,10 @@ f <- CounterFac(Year = 2008,Gender = "all", region = "all",industry = "all",form
 tictoc::toc()
 
 g <- CounterFac(Year = 2008,Gender = "all", region = "all", industry = "man" ,formType = "JM_NoInd",
-                reg = 2)
+                reg = 100)
 
 h <- CounterFac(Year = 2008,Gender = "all", region = "all", industry = "ser" ,formType = "JM_NoInd",
-                reg = 2)
+                reg = 100)
 
 i <- CounterFac(Year = 2008,Gender = "all", region = "all", industry = "man_ser" ,formType = "JM_NoInd",
                 reg = 2)

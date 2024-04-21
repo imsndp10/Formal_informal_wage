@@ -56,7 +56,7 @@ longtest <- pivot_longer(data = test, cols =  c("duqf_SE", "l.duqf_SE",
 
 #PLot here
 pdat <- longtest %>% 
-  filter(forumla == "NoInd" & industry == "all")
+  filter(forumla == "NoInd" & industry == "ser")
 
 plotdat <- pivot_wider(data = pdat, names_from = estimate,
                        values_from = value) %>% 
