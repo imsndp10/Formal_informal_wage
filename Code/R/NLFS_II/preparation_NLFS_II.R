@@ -64,7 +64,7 @@ workingPop <- wdat%>%
          year = 2008,
          fiscalyr = "2007/08")%>%
   left_join(., hchar, by = c("psu", "hhid")) %>%
-  filter(q10>=15 & q10 <= 65) %>% 
+  filter(q10 >=5) %>% 
   left_join(., edu_classify, by = c("q30" = "value")) %>% 
   left_join(., caste_classify, by = c("q11" = "value")) %>% 
   left_join(., chores, by = c("psu", "hhid", "idcode")) %>% 
@@ -85,13 +85,19 @@ workingPop <- wdat%>%
          age = q10,
          experience = age-yrs_schooling-6,
          experience = if_else(experience>0, experience, 0),
-         experience_sq = experience*experience) %>% 
+         experience_sq = experience*experience) %>%
+  group_by(psu, hhid) %>% 
+  mutate(n = n()-1,
+         tot_yrs_school = sum(yrs_schooling, na.rm = TRUE) - yrs_schooling,
+         average_yrs = if_else(n == 0 & tot_yrs_school == 0, 0, tot_yrs_school/n)) %>% 
+  ungroup() %>%
   mutate(workingClasses = case_when(q44==1 ~ "Employed",
                                     q44%in%c(2,3) ~ "selfEmployed",
                                     q76==1 & q77==1 ~ "unEmployed",
                                     q76==1 & q77==2 & q82%in%c(2,3) ~ "unEmployed",
                                     TRUE ~ "Other"))%>% 
-  filter(q16==1)
+  filter(q16==1) %>% 
+  filter(q10>=15 & q10 <= 65)
 
 employedPop <- workingPop %>% 
   left_join(., jobs_classification, by = c("q41"="value"))%>%
@@ -142,7 +148,7 @@ sdat <- employedPop %>%
   filter(workingClasses == "Employed") %>% 
   left_join(., formal, by = c("psu", "hhid", "idcode")) %>% 
   select(c("psu", "hhid", "year", "child_12", "hh_size",
-           "education", "yrs_schooling", "caste_group_6","tot_chores_hrs",
+           "education", "yrs_schooling", "average_yrs", "caste_group_6","tot_chores_hrs",
            "female", "married", "voc_train",
            "urban", "age", "experience", "experience_sq", "class_5", 
            "job_sector", "hourly_wage", "workplace", "sz_workplace",

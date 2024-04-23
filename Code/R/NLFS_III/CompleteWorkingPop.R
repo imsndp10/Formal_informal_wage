@@ -85,9 +85,9 @@ industry_na <- ind_cls %>%
 workingPop <- wdat%>%
   mutate(year = 2018)%>%
   left_join(., famChar, by = c("psu", "hhld"))%>%
+  left_join(., edu, by= c("grade_comp"="value")) %>% 
   rename(Age = age) %>%
-  filter(Age>=15 & Age <= 65)%>%
-  left_join(., edu, by= c("grade_comp"="value"))%>%
+  filter(Age >= 5) %>%  
   left_join(., caste, by = c("caste"="value"))%>% 
   left_join(., hrs, by = c("personid"))%>%
   mutate(education = case_when(can_read ==2 & is.na(current_school) &ever_school==2 ~ "Illiterate",
@@ -98,6 +98,11 @@ workingPop <- wdat%>%
                                TRUE ~ education),
          yrs_schooling = if_else(education=="Illiterate", 0, yrs_schooling))%>%
   mutate(yrs_schooling = if_else(is.na(yrs_schooling)&education=="Below_primary", 1, yrs_schooling))%>%
+  group_by(psu, hhld) %>% 
+  mutate(n = n()-1,
+         tot_yrs_school = sum(yrs_schooling, na.rm = TRUE) - yrs_schooling,
+         average_yrs = if_else(n == 0 & tot_yrs_school == 0, 0, tot_yrs_school/n)) %>% 
+  ungroup() %>% 
   mutate(voc_train = case_when(is.na(tec_voc_training)~0,
                                tec_voc_training==2~0,
                                TRUE~1),
@@ -115,11 +120,11 @@ workingPop <- wdat%>%
                                     wrk_paid==2 & wrk_busns ==1 ~ "selfEmployed",
                                     seek30==1 & seektype%in%c(1,3)  ~ "unEmployed",
                                     seek30==2 & jobfixed==1 & seektype%in%c(1,3) ~ "unEmployed",
-                                    TRUE ~ "Other"))
+                                    TRUE ~ "Other")) %>% 
+  filter(Age>=15 & Age <= 65)
 
 
-
-employedPop <- workingPop%>%
+ employedPop <- workingPop%>%
   left_join(., jobs, 
             by = c("mwrk_nsco4" = "value"))%>%
   left_join(., industry, by= c("mwrk_nsic4"="value"))%>%
@@ -160,7 +165,7 @@ employedPop <- workingPop%>%
                                       last_res==2 & reason_here%in%c(3,4,5,6,7)~1,
                                       TRUE~0),
          weight = wt_prov_ind_year,
-         hhid = hhld)
+         hhid = hhld) 
 
 edat <- employedPop %>% 
   filter(job_sector != "Agriculture") %>% 
@@ -173,17 +178,19 @@ edat <- employedPop %>%
                                 mwrk_place == 3 & mwrk_enttype == 1 ~ 1,
                                 mwrk_place == 3 & mwrk_enttype %in% c(2, 3) & mwrk_entregd == 1 ~ 1,
                                 TRUE ~ 0)) %>%  
-  mutate(formal_emp = case_when(workingClasses == "Employed" &
+  mutate(formal_employment = case_when(workingClasses == "Employed" &
                                (mwrk_soc_secu == 1 | 
                                 mwrk_pdannlve ==1 | 
                                 mwrk_pdsicklve == 1) ~ 1,
                                 workingClasses == "selfEmployed" &
                                 formalsect == 1 ~ 1,
-                                TRUE ~ 0))
+                                TRUE ~ 0)) %>% 
+  filter(workingClasses == "Employed")
 
 sdat <- edat%>%
   select(c("year", "hhid", "dist", "urban", "weight", "child_12", "child_5", "child_5_12", "hh_size", 
-           "caste_group_6", "female", "married", "education", "yrs_schooling", "current_schooling",
+           "caste_group_6", "female", "married", "education", "yrs_schooling",
+           "average_yrs",  "current_schooling",
            "experience", "experience_sq", "voc_train", "prod_hrs", "chores_hrs", "tot_chores_hrs",
            "workingClasses", "LF_participation", "LM_participation", 
            "hourly_wage", "migrated_fr_job", "overtime_40",
