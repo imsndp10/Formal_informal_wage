@@ -5,6 +5,7 @@ cat("\014")
 library("tidyverse")
 library("dplyr")
 library("tidyr")
+library("haven")
 
 ###DataImport####
 wdat <- readRDS("../../../Data/Raw/NLFS_III/NLFS_III_personalData.Rds")
@@ -146,19 +147,19 @@ workingPop <- wdat%>%
                                     TRUE ~ workingClasses),
          LF_participation = if_else(workingClasses%in%c("Employed", "unEmployed"), 1, 0),
          LM_participation = if_else(workingClasses=="Employed", 1, 0))%>%
-  mutate(workplace = case_when(mwrk_place==2~ "Others",
+  mutate(workplace = case_when(mwrk_place==2~ "others",
                                mwrk_place==1 & mwrk_orgtype%in%c(1,2)~ "Government",
-                               mwrk_place==1 & mwrk_orgtype%in%c(3,4)~ "Private institution",
-                               mwrk_place==1 & mwrk_orgtype%in%c(5,6,7)~ "Others",
-                               mwrk_place==3 & mwrk_enttype==1 ~ "Private institution",
-                               mwrk_place==3 & mwrk_enttype==2 ~ "Private business",
-                               mwrk_place==3 & mwrk_enttype==3 ~ "Others"),
-         sz_workplace = case_when(mwrk_place==2 ~"<5",
-                                  mwrk_empnum%in%c(1,2)~"<5",
-                                  mwrk_empnum%in%c(3)~"5-9",
-                                  mwrk_empnum%in%c(4,5)~">=10",
-                                  mwrk_enttype==1 ~">=10",
-                                  mwrk_orgtype%in%c(1,2,5)~ ">=10"),
+                               mwrk_place==1 & mwrk_orgtype%in%c(3,4)~ "Private_Institution",
+                               mwrk_place==1 & mwrk_orgtype%in%c(5,6,7)~ "others",
+                               mwrk_place==3 & mwrk_enttype==1 ~ "Private_Institution",
+                               mwrk_place==3 & mwrk_enttype==2 ~ "Private_Business",
+                               mwrk_place==3 & mwrk_enttype==3 ~ "others"),
+         sz_workplace = case_when(mwrk_place==2 ~"small_size_firm",
+                                  mwrk_empnum%in%c(1,2)~"small_size_firm",
+                                  mwrk_empnum%in%c(3)~"medium_size_firm",
+                                  mwrk_empnum%in%c(4,5)~"large_size_firm",
+                                  mwrk_enttype==1 ~"large_size_firm",
+                                  mwrk_orgtype%in%c(1,2,5)~ "large_size_firm"),
          overtime_40 = if_else(usulhr_mwrk>40, 1, 0), 
          migrated_fr_job = case_when( birth_same==1 & last_res==1~0,
                                       birth_same==2 & why_leave%in%c(3,4,5,6,7)~1,
@@ -185,15 +186,23 @@ edat <- employedPop %>%
                                 workingClasses == "selfEmployed" &
                                 formalsect == 1 ~ 1,
                                 TRUE ~ 0)) %>% 
-  filter(workingClasses == "Employed")
+  filter(workingClasses == "Employed") %>%
+  mutate(age = Age,
+         formal_sector = formalsect)
 
 sdat <- edat%>%
-  select(c("year", "hhid", "dist", "urban", "weight", "child_12", "child_5", "child_5_12", "hh_size", 
-           "caste_group_6", "female", "married", "education", "yrs_schooling",
-           "average_yrs",  "current_schooling",
-           "experience", "experience_sq", "voc_train", "prod_hrs", "chores_hrs", "tot_chores_hrs",
-           "workingClasses", "LF_participation", "LM_participation", 
-           "hourly_wage", "migrated_fr_job", "overtime_40",
-           "class_5", "job_sector",
-           "workplace", "sz_workplace"))
+  select(c("psu", "hhid", "year", "child_12", "hh_size",
+           "education", "yrs_schooling", "average_yrs", "caste_group_6", "tot_chores_hrs",
+           "female", "married", "voc_train",
+           "urban", "age", "experience", "experience_sq", "class_5", 
+           "job_sector", "hourly_wage", "workplace", "sz_workplace",
+            "overtime_40", "migrated_fr_job", "formal_sector", "formal_employment",
+             "weight"))
+labelled::var_label(sdat) <- NULL
+
+#Save the rds file for data set
+write_rds(sdat, file = "../../../Data/Cleaned/NLFS_III/NLFS_III.RDS", compress = "gz")
+
+# Save the object in DTA format
+write_dta(sdat, "../../../Data/Cleaned/NLFS_III/NLFS_III.dta")
 
