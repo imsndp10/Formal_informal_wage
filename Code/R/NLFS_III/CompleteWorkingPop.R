@@ -19,7 +19,10 @@ hchar <- wdat%>%group_by(psu, hhld)%>%
   summarise(child_12 =sum(age<=12),
             child_5 = sum(age<=5),
             child_5_12 = sum(age>5 & age<=12),
-            hh_size = n())
+            hh_size = n(),
+            old_70 = sum(age>=70)) %>% 
+  mutate(dependent = child_12 + old_70,
+         dep_ratio = dependent/hh_size)
 
 #additional household characteristic
 famChar <- family%>%
@@ -191,7 +194,7 @@ edat <- employedPop %>%
          formal_sector = formalsect)
 
 sdat <- edat%>%
-  select(c("psu", "hhid", "year", "child_12", "hh_size",
+  select(c("psu", "hhid", "year", "child_12", "hh_size", "dependent", "dep_ratio",
            "education", "yrs_schooling", "average_yrs", "caste_group_6", "tot_chores_hrs",
            "female", "married", "voc_train",
            "urban", "age", "experience", "experience_sq", "class_5", 
