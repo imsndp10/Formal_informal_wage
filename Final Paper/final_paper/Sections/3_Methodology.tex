@@ -1,0 +1,106 @@
+\section{Methodology} \label{sec:methodology}
+\subsection{Existing approaches and related literature}
+
+The measurement of the gender-based wage gap can be traced back to the seminal work of \textcite{Oaxaca1973} and \textcite{Blinder1973}, wherein the mean wage gap was decomposed into composition and structure effects. This methodological development has spurred a substantial body of research aimed at refining and extending the Oaxaca-Blinder decomposition beyond the single point estimate of the wage distribution over the past half-century \parencite{Fortin2011}. 	Methodological extensions towards whole of the wage distribution allows for the identification of gender gaps specific to particular wage groups, facilitating a deeper understanding of differences both between and within groups \parencite{Machado2005}. Recent applications of distributional decomposition include study of wage gap \parencite{Maasoumi2019}, educational achievements \parencite{Le2018},  and regional inequalities \parencite{Jemmali2023} over others. \par
+
+A major hurdle in distributional decomposition is to construct a counterfactual distribution, which can not be directly observed. As a result, significant amount of effort in decomposition literature has been devoted to develop methods for constructing counterfactual. \textcite{DiNardo1996} use kernel density reweighing, whereas, \textcite{Firpo2009} utilize recentered influence function. \textcite{Machado2005} deploy quantile regression to estimate the inverse conditional distribution function. In contrast, \textcite{Chernozhukov2013} tackle the problem directly by estimating the conditional distributional regression model using quantile regression.\par
+
+In addition to going beyond mean, addressing the selection concern has been an important agenda in studying gender wage differentials. Four major strategies in the literature have been developed, namely: (a) imputation, (b) identification at infinity, (c) parametric modeling of selection, and (d) the bounding approach \parencite{Machado2017}. The imputation method involves utilizing observed covariates and economic model-based restrictions to impute values for the missing part of the data, i.e., those who do not participate in the work. A recent application, \textcite{Blau2021}, searches backward and forward in the panel data and proxies missing wage by the observation in the nearest wave. In contrast, identification at infinity circumvents the selection by limiting itself only to a much-smaller segment of labor force where participation rates are very high and selection is considered negligible \parencite{Machado2017,Mulligan2008,Heckman1990}.\par
+
+The parametric approach to selection correction is bolder; it aims to explicitly model the selection process, either at the mean \parencite{Newey2009, Heckman1979, Heckman1974} or at quantiles \parencite{Buchinsky1998}. In these models, the outcome and the latent selection equations exhibit linearity with respect to covariates and error terms are assumed to be independent of covariates conditional on the selection probability. In comparison, the bounding approach has a lesser ambition as it only seeks to tighten the worst-case scenario bounds on the gender wage gap vi\'{a} restrictions motivated by the economic theory \parencite{Blundell2007}. But, these restrictions -- availability of instrument to tighten the bound, pre-suppositions on the selection's sign, or both -- being weaker than parametric modeling impose wider bounds.\par
+
+In the spirit of \textcite{Buchinsky1998}, we correct for selection vi\'{a} parametric approach in  the quantile framework. However, we use \textcite{Arellano2017}'s copula based technique to model the joint-distribution of error terms in outcome and selection models. This approach overcomes \textcite{Huber2015}'s  critique concerning the conditional independence assumption in sample selection models, particularly its implication of identical slopes across all quantile regressions. With additional restrictions compared to the bounding approach, our methodology provides more tighter bounds and greater flexibility in capturing the direction of sample selection from the observed data, rather than relying solely on theoretical priors.\par
+
+\subsection{Selection in  a distributional decomposition} \label{subsec:decomposition}
+We consider a standard employment and wage generating model with 
+\begin{linenomath*}\begin{align}
+	Y^{*} &= q(U, X),\\
+	E &= \mathbbm{1} \{V\leq p(Z)\},\\
+	Y &= Y^{*} \text{~if~}E = 1,    
+\end{align} \end{linenomath*} 
+where the latent wage $Y^{*}$ is a function of wage determining observables $X$ and unobservables $U$. The $V$ is the difference in unobservables of the reservation and market wage equations, which jointly with $Z = (B,X)$ defines the employment status $E$. Since we can only observe wage $Y$ of employed, we are left with a sample selection bias dictated by the dependence structure between two sets of unobservables, $U$ and $V$. Further, the $Z$ strictly contains $X$ and the instrument $B$ influences employment status but not the wage.\par
+
+Given the availability of (a) exclusion restriction $((U,V) {\perp\!\!\!\perp} Z| X )$, (b) continuous joint distribution of $(U,V)$, defined as $C_{x}(u,v)$, strictly increasing in $u$, (c) continuous outcome such that $\tau\mapsto q(\tau, x)$ is strictly increasing and continuous in $\tau$, and (d)  propensity score, $p(Z)\equiv \Pr(E=1|Z)$, which is always greater than zero, \textcite{Arellano2017} show that the observed rank for the $\tau^{th}$ quantile, $q(\tau, x)$, is no longer the $\tau$ in the selected sample, i.e.,
+\begin{linenomath*}\begin{align}
+	\begin{split}		
+		\Pr(Y^{*}\leq q(\tau, x)|E=1, Z=z) = Pr(U\leq \tau| V\leq p(z), Z=z)
+		&=G_{x}(\tau, p(z)) \\
+		&\equiv C_{x}(\tau, p)/p.
+	\end{split}
+\end{align}\end{linenomath*}
+Instead, the conditional copula $G_{x}$ maps ranks $\tau$ in the distribution of $Y^{*}$ conditional on $X=x$ to ranks $G_{x}(\tau, p(z))$ in the distribution of $Y$ conditional on $Z=z$. Thus,  for all $\tau \in (0,1)$, the conditional $\tau$-quantile of $Y^{*}$ coincides with the conditional $G_{x}(\tau, p(z))$-quantile of $Y$ given $E=1$. As a result, knowing $G_{x}$ map from latent to observed ranks mean we can recover $q(\tau, x)$ as a quantile of observed outcomes by shifting percentile ranks. \par
+
+We work with linear quantile functions, which are selection corrected in three steps: first, propensity score $\hat{p}$ is computed using a probit model, second, copula parameter $\hat{\rho}$ is estimated, and third, given $\hat{p}$ and $\hat{\rho}$, $\tau$th quantile regression coefficient $\hat{\beta}_{\tau}$ is computed. Frank copula is used to model the dependence structure between $U$ and $V$. The choice of the Frank copula is primarily motivated by its simplicity, as it relies on a single parameter $\rho$. Moreover, the Frank copula demonstrates considerable flexibility, allowing for a wide range of data-driven dependencies, including negative. Also, $\rho$ has an useful interpretation; a negative $\rho$ imply positive selection into employment and vice-versa.  Additionally, we examine the robustness of results on copula-choice and provide Gaussian copula based estimates.\par
+ 
+
+ 
+
+Using the law of iterated probabilities, the wage cumulative distribution function conditional on gender $F_{Y_{g}|D_{g}}$ can be expanded to an integral of conditional outcome over the observed characteristics as
+\begin{linenomath*}\begin{align}
+	F_{Y_{g}|D_{g}}(y) = \int F_{Y_{g}|X,D_{g}}(y|X=x)\cdot dF_{X|D_{g}}(x), \hspace{2em} g\in (m,f). 
+\end{align}\end{linenomath*}
+To construct counterfactuals, e.g., what would be females' wages if they were paid like men, we can either manipulate $F_{X}$ as in \textcite{DiNardo1996}, or $F_{Y|X}$ as in \textcite{Chernozhukov2013}. The earlier approach uses re-weighting by propensity scores, which is not easily extended to address selection  \parencite{Maasoumi2017}, whereas, the latter estimates conditional distribution of the outcome employing the conditional quantile regression. We follow \textcite{Chernozhukov2013} and swap selection corrected conditional quantile regression coefficients across groups to construct counterfactual scenario of when females' returns are like males' as 
+\begin{linenomath*}\begin{align}
+	F_{Y_{m}^{C}:X=X|D_{f}}(y) = \int F_{Y_{m}|X,D_{m}}(y|X=x)\cdot dF_{X|D_{f}}(x).
+\end{align}\end{linenomath*}
+
+With the counterfactual in hand, we can apportion the total difference between male and female wage distribution $(TE \equiv F_{Y_{f}:X=X|D_{f}}  - F_{Y_{m}:X=X|D_{m}})$
+into differences due to differing returns to labor market characteristics (structural effect or SE) and differential distribution of those characteristics (composition effect or CE) i.e.,
+\begin{linenomath*}\begin{align}
+	\begin{split}		
+		TE &= \left[F_{Y_{f}:X=X|D_{f}} - F_{Y_{m}^{C}:X=X|D_{f}}\right] + \left[F_{Y_{m}^{C}:X=X|D_{f}} - F_{Y_{m}:X=X|D_{m}}\right]\\
+		&= SE + CE. \label{eq:TEdefn}
+	\end{split}
+\end{align}\end{linenomath*}
+
+We assume male to be the baseline and do not model male's selection into the workforce. A lack of suitable instrument for male's workforce participation also led to this methodological decision. As a result, the selection adjusted and unadjusted results differ in SE and TE, but not in CE. The practical implementation of the wage equation include years of schooling, experience, experience squared, caste group, marital status, total hours spent on household chores, buildup density in the district, and average district level out-migration. These variables are similar to human capital specifications of \textcite{Blau2017} and implementation found in \textcite{Maasoumi2019}. Details on the variable construction are available in the annex.\par 
+                                   
+\subsection{IV and the exclusion restriction}
+In literature, spousal income and number of children are two popular instrumental variables (IV) used for the female selection into the labor force. The pioneering work of \textcite{Heckman1974} uses number of children in a shadow price function, where as, others use it as an instrument  \parencite{Mulligan2008, Maasoumi2019, Heckman1980, chang2011labor, Lee2009}. The underlying argument of the IV is increased cost of child rearing will hinder women participating in the labor force. The strength of this exclusionary assumption depends on socio-economic norm which can vary widely in developed and developing economies. In Nepal, families are multi-generational and often child rearing is shared with grandparents. Additionally, in labor force surveys, we can observe that most women's labor participation in figure \vref{fig:ageWiseFemaleParticipation} is after the childbearing age group which is typically around 20 years of age \parencite{DHS2016}. The use of second style of IV,  non-wife spousal income, used in \textcite{schafgans1998ethnic, Martins2001} and \textcite{chang2011labor}, requires richer data-set than available to us.\par
+
+\begin{figure}[h] 
+	\centering
+	\includegraphics{AgeWise_femalParticipation_NLFS_all}
+	\caption{Female labor force participation with age group}
+	\label{fig:ageWiseFemaleParticipation}
+\end{figure}  
+
+In this context, we use the ratio of number of other wage earners to total working age population as an IV to determine female labor force participation. The key assumption being that it is plausible for females to specialize in home production and be excluded from the labor market if other family members are already earning. Also, the use of share instead of  directly using non-wife wages, avoids the problem of using spousal income, i.e., high wage earners marry similarly earning mates. A similar exclusion restriction strategy in conjunction with other instruments is implemented by \textcite{BenYahmed2018}. Additionally, we exploit the test developed by \textcite{Huber2014} to examine the validity of the instrument. They show that assumptions of exclusion restriction and positive monotonicity of selection instrument in the standard employment and wage generating model imply following two inequality constraints  
+\begin{linenomath*}\begin{align}
+		\mathbb{E}(Y|B=1, E=1, Y\leq y_{\text{q}})  \leq \mathbb{E}(Y|B=0, E=1) \leq  \mathbb{E}(Y|B=1, E=1, Y\geq y_{1-\text{q}}),
+\end{align}\end{linenomath*} 
+ where  $\text{q}$ is proportion of always selected in the mixed population, and $ y_{\text{q}}$ is the $\text{q}$-th conditional quantile in the conditional outcome distribution given $B =1$ and $E = 1$. These twin inequalities can be jointly tested using following null hypothesis: 
+
+\begin{linenomath*}\begin{align}
+		H_{0}:  \begin{pmatrix}
+			\mathbb{E}(Y|B=1, E=1, Y\leq y_{\text{q}}) - \mathbb{E}(Y|B=0, E=1)  \\
+			\mathbb{E}(Y|B=0, E=1) - \mathbb{E}(Y|B=1, E=1, Y\geq y_{1-\text{q}})  
+		\end{pmatrix} \leq \begin{pmatrix} 0\\0\end{pmatrix}
+\end{align}\end{linenomath*}  
+We discretize the instrument by presence of any other wage earner in the household as one and zero otherwise and test the joint hypothesis using mean and probability constraints. We fail to reject the proposed IV in all of our data sets even when considering all types of data partitions. In contrast, number of children in the family as an instrument either fails to converge or is rejected by the test in most of the data sets. The test results are available in the annex.\par  
+
+\subsection{Household dynamics in female participation}
+
+We check for role of the household dynamics in women's labor market outcomes vis-\'{a}-vis men through two ways. First, we look in to the effect of earning potentiality on job participation, and second, we examine gender gap in time allocated for home production. For the first, we explore how differential earning potential changes probability of female's engagement in employment using census (2011) data set. We proxy earning potential by male-female average years of schooling gap. The basic regression is a logit model for the probability that female $f$ in household $h$ participates in employment as an employee, 
+\begin{linenomath*}\begin{align}
+	P(\text{Employee}_{f, h}) = GAP_{h}\beta+ X_{f}\gamma+ Z_{h}\delta+ \psi_{u} + \pi_{d} + \epsilon_{f,h}, \label{eqn:earningPotRegEqn}
+	\end{align}\end{linenomath*} 
+where $GAP_{h}$ is male minus female average years of schooling of household $h$, $X_{f}$ is a vector of individual characteristics of female, $Z_{h}$ is a vector of household characteristics, $\psi_{u}$ is urban dummy, $\pi_{d}$ are district dummies, and $\epsilon_{f,h}$ is the stochastic error term.\par
+
+This $GAP_{h}$ is a rough measure as it compares all working age female household members with male members. For a sharper measurement of earning potential difference, we look into spousal pairs, replacing $GAP_{h}$ in equation \ref{eqn:earningPotRegEqn} with $GAP_{f}$, which is the gap in years of schooling between female and her husband. We extract two types of spousal pairs from the census. The first type is son and daughter-in-law pair. The second type is household heads and their spouses. These two types of spousal gaps allow us to examine differences caused by degree of home production responsibility. For robustness of the specifications, we also check the probit versions of the discussed models. Further, we contrast the results of probability of female being employed against female engagement in the own account work.\par 
+
+For the second objective, we run a baseline OLS model of time spent on doing household chores by individual $i$ of household $h$ as
+\begin{linenomath*}\begin{align}
+	TimeSpent_{i} = F\beta_{1} + E\beta_{2} + (F\times E)\beta_{3} + X_{i}\gamma+ Z_{h}\delta+ \psi_{u} + \epsilon_{i,h},
+	\end{align}\end{linenomath*} 
+where $F$ is a female dummy, $E$ is an employed dummy, $F\times E$ is an interaction term, $X_{i}$ is a vector of individual characteristics, $Z_{h}$ is a vector of household characteristics, $\psi_{u}$ is urban dummy, and $\epsilon_{i,h}$ is the stochastic error term. Years of schooling, age, and age squared are included in $X_{i}$, whereas, house ownership, land ownership, household size, and caste group are included in $Z_{h}$.  The time spent doing household chores is defined as total hours spent on home production and running household errands. Complete variable descriptions are available in the annex.\par
+
+Coefficients of interest are $\hat{\beta}_{1}, \hat{\beta}_{2}$, and $\hat{\beta}_{3}$ which provide information on gender-wise differential time allocation. For robustness of coefficients, we use two strategies. First, we construct variables with same definition from Living standard survey (2011) and Labor force surveys (2008, 2018) to conduct baseline regressions. Second, we remove variation associated with personal and household characteristics using statistical matching followed by regression. We use Mahalanobis distance matching using generalized full matching approach that assigns every  unit to subclass and minimizes the largest within-subclass distances in the matched sample \parencite{Savje2021}. Data balance, before and after matching, is reported in annex figure A5.\par 
+
+\subsection{Data sources}
+We compute wage gap through three rounds of nationally representative Nepal Labor Force Survey (NLFS) produced by National Statistics Office (NSO), formerly known as Central Bureau of Statistics (CBS), dated 1998, 2008, and 2018. These are multistage stratified random sampling surveys that consider geographical domain, urban-rural heterogeneity, and seasonal variation, followed by probable oversampling adjustments. The first round interviewed 14,400 households, while the subsequent rounds interviewed 16,000 and 18,000 households, resulting in a working population (15 - 65 years) of 38,535, 44,734, and 47,905 individuals, respectively. These surveys provide information on cash earnings from which we extracted employed samples of 6,477 (76\% males and 24\% females), 7,565 (74\% males and 26\% females), and 7,838 (76\% males and 24\% females) across all rounds. In addition to wages, surveys report individual and household characteristics, including demographics, skills acquisition, and job market attributes.\par
+
+For effects of earning potentiality on female labor market participation, we use Housing and Population Census 2011 of Nepal, also conducted by NSO. For this analysis we include all individuals in the working age (15-65 years). The census surveyed total of 5,427,302 households, out of which the available micro-data  randomly samples approximately 15.5\% of the total households to get the sample of 841,565 households. Additionally, we extract time use from the third round of Nepal Living Standard Survey (NLSS III) 2011. It was also conducted by NSO using two staged stratified random sampling with a population frame of census 2011. Six thousand households were interviewed across Nepal, leading to a working population sample size of 18,260 individuals, with 8,074 males and 10,186 females.\par  
+
+ 
+                            

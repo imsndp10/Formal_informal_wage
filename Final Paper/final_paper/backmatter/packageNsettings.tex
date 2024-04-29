@@ -1,0 +1,132 @@
+%Set paragraphs
+\setlength{\parskip}{0.25em} %gap between paragraph
+\setlength{\parindent}{2.1em} %indentation of paragraph
+
+%\usepackage[switch, modulo]{lineno}
+\usepackage[]{lineno}
+%\usepackage[modulo]{lineno}
+
+\usepackage{amsmath}
+\usepackage{bbm}
+\usepackage{amsfonts} 
+%additional math fonts
+\usepackage[mathscr]{euscript} %additional math
+%for expectation symbol
+%\DeclareMathOperator*{\E}{\mathbb{E}}
+
+\usepackage{graphicx}
+\usepackage{verbatim}%for multiline comments
+\usepackage[dvipsnames,svgnames,x11names,hyperref]{xcolor}
+\usepackage{tabularx} %%get textwidth tables
+\usepackage{longtable}
+\usepackage{siunitx}
+\newcolumntype{d}{S[input-symbols = ()]}
+
+% for landscape
+\usepackage{lscape}
+
+\usepackage{booktabs} % for using midrule in table
+\usepackage{xspace} % To get the spacing after macros right
+%------------------------------------------------
+\usepackage{makecell} % To get multiline table cells
+%------------------------------------------------
+\usepackage{array,multirow,graphicx} % to get rotating text in table
+\usepackage{rotating} %for rotated figs
+%------------------------------------------------
+\usepackage{mparhack} % To get marginpar right
+\frenchspacing % Reduces space after periods to make text more compact
+\usepackage{varioref} % More descriptive referencing
+
+%%%shortcut for graphics location
+\graphicspath{ {images/} }
+
+%For double spacing
+\usepackage{setspace}
+\onehalfspacing
+
+
+\usepackage[T1]{fontenc}
+\usepackage[british]{babel}
+
+
+
+%margins
+\usepackage[a4paper, left= 1 in , right= 1 in, top= 1 in, bottom= 1 in]{geometry}
+%\usepackage[left= 1 in , right= 1 in, top= 1 in, bottom= 1 in]{geometry}
+
+
+\usepackage[
+	backend = biber,
+	bibencoding = latin1,
+	style=apa]{biblatex}
+\DeclareLanguageMapping{british}{british-apa}
+\addbibresource{backmatter/wage_gap.bib}
+
+
+\usepackage{fancyhdr}
+
+
+\usepackage{footnotebackref}
+\usepackage{epsfig,graphics}
+\usepackage{etoolbox}
+%\overfullrule=5pt %%%%%%Remove this to remove badbox indicator
+
+\usepackage{appendix}
+
+%making the list of symbols 
+\usepackage[]{nomencl}
+\makenomenclature
+
+\nomlabelwidth= 4em % to change the gap between the symbol and text
+\renewcommand{\nomname}{List of Symbols}
+\usepackage{etoolbox}
+
+
+%%%%Code formatting 
+%\usepackage{minted}
+\usepackage{csquotes}
+\usepackage{lmodern}
+
+%%%%%%%%%%tikz
+
+% Include TikZ and PGF packages for high-quality graphics, schematics
+% and plots. This is optional; at the current time, when run with
+% latex to create a .dvi file, the xdvi viewer will produce incorrect
+% formatting for the TikZ figures.  If the .dvi file is converted to
+% pdf using "dvipdf" the resulting pdf file is correct.  If this
+% example is used with  pdflatex, the resulting TikZ figures in the
+% output look fine.
+\usepackage{tikz}       		% The base tikz+pgf package
+\usetikzlibrary{arrows,shapes, 
+            chains, positioning}  %Tikz extension 
+\usepackage{pgfplots}			% Tikz-based package for making plots 
+\pgfplotsset{compat=1.6}      % This *might* be necessary for your
+                               % version of pgfplots.
+
+
+%Using hyperref at the last.
+
+
+\usepackage{hyperref}
+\hypersetup{
+%draft, % Uncomment to remove all links (useful for printing in black and white)
+linktocpage,
+colorlinks=true, breaklinks=true, %bookmarks=true, bookmarksnumbered,
+urlcolor=[RGB]{128,0,0}, linkcolor=[RGB]{25,25,112}, citecolor=[RGB]{72,61,139},  % Link colors
+pdftitle={Gender wage in Nepal}, % PDF title
+pdfauthor={Manab, Sanjit, Tilak and Resham}, % PDF Author
+pdfsubject={Labor economics}, % PDF Subject
+pdfkeywords={Labor economics, Gender wage gap}, % PDF Keywords
+pdfcreator={Manab, Sanjit, Tilak and Resham}, % PDF Creator
+}
+
+\makeatletter
+\def\@footnotecolor{red}
+\define@key{Hyp}{footnotecolor}{%
+ \HyColor@HyperrefColor{#1}\@footnotecolor%
+}
+\patchcmd{\@footnotemark}{\hyper@linkstart{link}}{\hyper@linkstart{footnote}}{}{}
+\makeatother
+\hypersetup{footnotecolor=[RGB]{255,69,0}}
+
+

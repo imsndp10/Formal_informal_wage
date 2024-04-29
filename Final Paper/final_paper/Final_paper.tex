@@ -1,0 +1,41 @@
+
+\documentclass[12pt]{article}
+\input{backmatter/packageNsettings.tex}
+
+\begin{document}
+
+
+	\input{Sections/00_TitlePage.tex}
+	
+
+	%\tableofcontents
+	
+	%\doublespacing
+	%Empty second page for printing
+	 \begin{center}
+	 	{This page intentionally left blank.}
+	 \end{center}
+	\thispagestyle{empty}
+	\setcounter{page}{0}
+	\newpage
+	%End of empty second page
+\begin{linenumbers}	
+	\input{Sections/1_Introduction.tex}
+	\input{Sections/3_Methodology.tex}
+	\input{Sections/5_Results.tex}
+	
+	
+	%%\input{Sections/2_LiteratureReview.tex}
+	
+	
+
+	
+\end{linenumbers}
+	
+	\singlespacing 
+ 	\printbibliography
+	\clearpage
+	%\input{Sections/8_Appendix.tex}
+
+	
+\end{document}
