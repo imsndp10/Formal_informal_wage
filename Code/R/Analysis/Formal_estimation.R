@@ -22,4 +22,11 @@ data1 <- readRDS("../../../Data/Cleaned/Pooled/Pooled.RDS") %>%
   ungroup() %>% 
   filter(year == 2018)
 
-fixest::feglm(formal_employment ~ HH_formal + yrs_schooling, data = data, family = binomial("logit"))  
+bdat <- fixest::feols(formal_employment ~ HH_formal + dep_ratio + female + urban +
+                        experience + experience_sq + yrs_schooling , data = data)  
+
+etable(bdat)
+adat <- fixest::feols(formal_employment ~ HH_formal + dep_ratio + female + urban + 
+                experience + experience_sq|yrs_schooling ~ average_yrs , data = data)  
+
+etable(adat, tex = TRUE, file = "../../../Final Paper/final_paper/tables/endogenity.tex")

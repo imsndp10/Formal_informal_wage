@@ -11,65 +11,49 @@ The parametric approach to selection correction is bolder; it aims to explicitly
 
 In the spirit of \textcite{Buchinsky1998}, we correct for selection vi\'{a} parametric approach in  the quantile framework. However, we use \textcite{Arellano2017}'s copula based technique to model the joint-distribution of error terms in outcome and selection models. This approach overcomes \textcite{Huber2015}'s  critique concerning the conditional independence assumption in sample selection models, particularly its implication of identical slopes across all quantile regressions. With additional restrictions compared to the bounding approach, our methodology provides more tighter bounds and greater flexibility in capturing the direction of sample selection from the observed data, rather than relying solely on theoretical priors.\par
 
-\subsection{OLS regression and the Blinder-Oaxaca decomposition} \label{subsec:decomposition}
-The analysis is based on a Mincerian earnings function, which is modelled by \textcite{Blinder1973, Oaxaca1973} and includes experience (as a proxy for the job training), its square, education and other variables that are associated with individuals’ earnings. This model is specified for the formal and the informal sector as follows:
-\begin{linenomath*}
-	\begin{align}
-	ln w_i^{FE} &= x_i^{FE}\beta + \epsilon_i^{FE}, \\
-	ln w_i^{IE} &= x_i^{IE}\beta + \epsilon_i^{IE}
-\end{align}
- \end{linenomath*} 
-where $i = \{1, ... , N\}$ denotes individuals and $\ln w_i^{FE}$ and $\ln w_i^{IE}$ refer to the log of the hourly wage of the individual $i$ in the formal and the informal sectors, respectively. $x_i^{FE}$ and $x_i^{IE}$ represent individual characteristics such as education, experience, gender, location, etc. The estimated earning equations for formal and informal workers, $\ln w_i^{FE} = x_i^{FE}\beta + \epsilon_i^{FE}$ and $\ln w_i^{IE} = x_i^{IE}\beta + \epsilon_i^{IE}$, are used to calculate the difference in wages between the formal sector and the informal sector.
-
-First, taking the gross wage differential (denoted as $W$) between the Formal employment ($FE$) and the informal employment ($IE$) groups is the difference in the predicted logarithmic daily wages of the two groups (the higher wage group: FE; and the lower wage group: IE).
+\subsection{Selection in  a distributional decomposition} \label{subsec:decomposition}
+We consider a standard employment and wage generating model with 
 \begin{linenomath*}\begin{align}
-	W = E(Y_{FE}) - E(Y_{IE})
+	Y^{*} &= q(U, X),\\
+	E &= \mathbbm{1} \{V\leq p(Z)\},\\
+	Y &= Y^{*} \text{~if~}E = 1,    
+\end{align} \end{linenomath*} 
+where the latent wage $Y^{*}$ is a function of wage determining observables $X$ and unobservables $U$. The $V$ is the difference in unobservables of the reservation and market wage equations, which jointly with $Z = (B,X)$ defines the employment status $E$. Since we can only observe wage $Y$ of employed, we are left with a sample selection bias dictated by the dependence structure between two sets of unobservables, $U$ and $V$. Further, the $Z$ strictly contains $X$ and the instrument $B$ influences employment status but not the wage.\par
+
+Given the availability of (a) exclusion restriction $((U,V) {\perp\!\!\!\perp} Z| X )$, (b) continuous joint distribution of $(U,V)$, defined as $C_{x}(u,v)$, strictly increasing in $u$, (c) continuous outcome such that $\tau\mapsto q(\tau, x)$ is strictly increasing and continuous in $\tau$, and (d)  propensity score, $p(Z)\equiv \Pr(E=1|Z)$, which is always greater than zero, \textcite{Arellano2017} show that the observed rank for the $\tau^{th}$ quantile, $q(\tau, x)$, is no longer the $\tau$ in the selected sample, i.e.,
+\begin{linenomath*}\begin{align}
+	\begin{split}		
+		\Pr(Y^{*}\leq q(\tau, x)|E=1, Z=z) = Pr(U\leq \tau| V\leq p(z), Z=z)
+		&=G_{x}(\tau, p(z)) \\
+		&\equiv C_{x}(\tau, p)/p.
+	\end{split}
 \end{align}\end{linenomath*}
-where $E(Y)$ denotes the expected value of the outcome variable, is accounted for by group diﬀerences in the predictors. \par
+Instead, the conditional copula $G_{x}$ maps ranks $\tau$ in the distribution of $Y^{*}$ conditional on $X=x$ to ranks $G_{x}(\tau, p(z))$ in the distribution of $Y$ conditional on $Z=z$. Thus,  for all $\tau \in (0,1)$, the conditional $\tau$-quantile of $Y^{*}$ coincides with the conditional $G_{x}(\tau, p(z))$-quantile of $Y$ given $E=1$. As a result, knowing $G_{x}$ map from latent to observed ranks mean we can recover $q(\tau, x)$ as a quantile of observed outcomes by shifting percentile ranks. \par
 
-Based on the linear model
-where $X$ is a vector containing the predictors and a constant, β contains the slope parameters and the intercept, and $\epsilon$ is the error, the mean outcome difference can be expressed as the difference in the linear prediction at the group-speciﬁc means of the regressors. That is:
-\begin{linenomath*}
-	\begin{align}
-	W = E(Y_{FE}) - E(Y_{IE}) = {\left(E(X_{FE})\right)}^{\prime} \beta_{FE} - {\left(E(X_{IE})\right)}^{\prime} \beta_{IE}
-\end{align}
-\end{linenomath*}
-because
-\begin{linenomath*}
-	\begin{align}
-		E(Y_{l}) = E(X_{l}^{\prime} \beta_{l} + \epsilon_{l}) = E(X_{l}^{\prime} \beta_{l}) + E(\epsilon_{l}) = E(X_{l}^{\prime} \beta_{l})
-		\label{eqn:sandy}
-	\end{align}
-\end{linenomath*}
- where $E(\beta_{l}) = \beta_{l}$ and $E(\epsilon_{l}) = 0$ by assumption.
+We work with linear quantile functions, which are selection corrected in three steps: first, propensity score $\hat{p}$ is computed using a probit model, second, copula parameter $\hat{\rho}$ is estimated, and third, given $\hat{p}$ and $\hat{\rho}$, $\tau$th quantile regression coefficient $\hat{\beta}_{\tau}$ is computed. Frank copula is used to model the dependence structure between $U$ and $V$. The choice of the Frank copula is primarily motivated by its simplicity, as it relies on a single parameter $\rho$. Moreover, the Frank copula demonstrates considerable flexibility, allowing for a wide range of data-driven dependencies, including negative. Also, $\rho$ has an useful interpretation; a negative $\rho$ imply positive selection into employment and vice-versa.  Additionally, we examine the robustness of results on copula-choice and provide Gaussian copula based estimates.\par
+ 
 
-To identify the contribution of group diﬀerences in predictors to the overall outcome difference, equation~\vref{eqn:sandy} can be rearranged, for example, as follows:
-\begin{linenomath*}
-	\begin{align}
-		W &= {\left(E(X_{FE}) - E(X_{IE})\right)}^{\prime} \beta_{IE} + {\left(E(X_{IE})\right)}^{\prime} (\beta_{FE} - \beta_{IE}) + {\left(E(X_{FE}) - E(X_{IE})\right)}^{\prime} {\left(\beta_{FE} - \beta_{IE}\right)}
-	\end{align}
-	\label{eqn:threefold}
-\end{linenomath*}
+ 
 
-This is a “threefold” decomposition; that is, the outcome difference is divided into three components:
-\begin{align}
-	W = E + C + I   
-	\label{eqn:threecomponent}
-\end{align}
+Using the law of iterated probabilities, the wage cumulative distribution function conditional on gender $F_{Y_{g}|D_{g}}$ can be expanded to an integral of conditional outcome over the observed characteristics as
+\begin{linenomath*}\begin{align}
+	F_{Y_{g}|D_{g}}(y) = \int F_{Y_{g}|X,D_{g}}(y|X=x)\cdot dF_{X|D_{g}}(x), \hspace{2em} g\in (m,f). 
+\end{align}\end{linenomath*}
+To construct counterfactuals, e.g., what would be females' wages if they were paid like men, we can either manipulate $F_{X}$ as in \textcite{DiNardo1996}, or $F_{Y|X}$ as in \textcite{Chernozhukov2013}. The earlier approach uses re-weighting by propensity scores, which is not easily extended to address selection  \parencite{Maasoumi2017}, whereas, the latter estimates conditional distribution of the outcome employing the conditional quantile regression. We follow \textcite{Chernozhukov2013} and swap selection corrected conditional quantile regression coefficients across groups to construct counterfactual scenario of when females' returns are like males' as 
+\begin{linenomath*}\begin{align}
+	F_{Y_{m}^{C}:X=X|D_{f}}(y) = \int F_{Y_{m}|X,D_{m}}(y|X=x)\cdot dF_{X|D_{f}}(x).
+\end{align}\end{linenomath*}
 
-The first component in equation \vref{eqn:threecomponent},
-$E = {\left(E(X_{FE}) - E(X_{IE})\right)}^{\prime} \beta_{IE}$
-amounts to the part of the differential that is due to group diﬀerences in the predictors (the “endowments effect”). 
+With the counterfactual in hand, we can apportion the total difference between male and female wage distribution $(TE \equiv F_{Y_{f}:X=X|D_{f}}  - F_{Y_{m}:X=X|D_{m}})$
+into differences due to differing returns to labor market characteristics (structural effect or SE) and differential distribution of those characteristics (composition effect or CE) i.e.,
+\begin{linenomath*}\begin{align}
+	\begin{split}		
+		TE &= \left[F_{Y_{f}:X=X|D_{f}} - F_{Y_{m}^{C}:X=X|D_{f}}\right] + \left[F_{Y_{m}^{C}:X=X|D_{f}} - F_{Y_{m}:X=X|D_{m}}\right]\\
+		&= SE + CE. \label{eq:TEdefn}
+	\end{split}
+\end{align}\end{linenomath*}
 
-The second component in  equation \vref{eqn:threecomponent},
-
-$C = {\left(E(X_{IE})\right)}^{\prime} (\beta_{FE} - \beta_{IE})$ measures the contribution of diﬀerences in the coeﬃcients (including diﬀerences in the intercept). \par 
-
-The third component in  equation \vref{eqn:threecomponent},
-
-$I = {\left(E(X_{FE}) - E(X_{IE})\right)}^{\prime} {\left(\beta_{FE} - \beta_{IE}\right)}$ is an interaction term accounting for the fact that diﬀerences in endowments and coefﬁcients exist simultaneously between the two groups. \par
-
-The decomposition shown in equation \vref{eqn:threefold} is formulated from the viewpoint of group IE. That is, the group diﬀerences in the predictors are weighted by the coeﬃcients of group IE to determine the endowments eﬀect (E). The E component measures the expected change in group IE’s mean outcome if group IE had group FE’s predictor levels. Similarly, for the C component (coeﬃcients eﬀect), the diﬀerences in coeﬃcients are weighted by group IE’s predictor levels. That is, the C component measures the expected change in group IE’s mean outcome if group IE had group FE’s coeﬃcients. \par
+We assume male to be the baseline and do not model male's selection into the workforce. A lack of suitable instrument for male's workforce participation also led to this methodological decision. As a result, the selection adjusted and unadjusted results differ in SE and TE, but not in CE. The practical implementation of the wage equation include years of schooling, experience, experience squared, caste group, marital status, total hours spent on household chores, buildup density in the district, and average district level out-migration. These variables are similar to human capital specifications of \textcite{Blau2017} and implementation found in \textcite{Maasoumi2019}. Details on the variable construction are available in the annex.\par 
                                    
 \subsection{IV and the exclusion restriction}
 In literature, spousal income and number of children are two popular instrumental variables (IV) used for the female selection into the labor force. The pioneering work of \textcite{Heckman1974} uses number of children in a shadow price function, where as, others use it as an instrument  \parencite{Mulligan2008, Maasoumi2019, Heckman1980, chang2011labor, Lee2009}. The underlying argument of the IV is increased cost of child rearing will hinder women participating in the labor force. The strength of this exclusionary assumption depends on socio-economic norm which can vary widely in developed and developing economies. In Nepal, families are multi-generational and often child rearing is shared with grandparents. Additionally, in labor force surveys, we can observe that most women's labor participation in figure \vref{fig:ageWiseFemaleParticipation} is after the childbearing age group which is typically around 20 years of age \parencite{DHS2016}. The use of second style of IV,  non-wife spousal income, used in \textcite{schafgans1998ethnic, Martins2001} and \textcite{chang2011labor}, requires richer data-set than available to us.\par

@@ -1,0 +1,17 @@
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.log
+*.out
+Final_paper.toc
+Final_paper.bbl
+Final_paper.aux
+Final_paper.bcf
+Final_paper.blg
+Final_paper.log
+Final_paper.out
+Final_paper.pdf
+Final_paper.run.xml
+Final_paper.synctex.gz
+Final_paper.nlo

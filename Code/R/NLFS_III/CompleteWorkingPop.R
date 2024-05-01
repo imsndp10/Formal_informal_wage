@@ -12,7 +12,6 @@ wdat <- readRDS("../../../Data/Raw/NLFS_III/NLFS_III_personalData.Rds")
 family <- readRDS("../../../Data/Raw/NLFS_III/NLFS_III_householdData.Rds")
 absent <- readRDS("../../../Data/Raw/NLFS_III/NLFS_III_absenteeData.Rds")
 
-
 wdat <- sjlabelled::remove_all_labels(wdat)
 
 hchar <- wdat%>%group_by(psu, hhld)%>%
@@ -194,7 +193,7 @@ edat <- employedPop %>%
          formal_sector = formalsect)
 
 sdat <- edat%>%
-  select(c("psu", "hhid", "year", "child_12", "hh_size", "dependent", "dep_ratio",
+  select(c("psu", "hhid", "year", "dist", "child_12", "hh_size", "dependent", "dep_ratio",
            "education", "yrs_schooling", "average_yrs", "caste_group_6", "tot_chores_hrs",
            "female", "married", "voc_train",
            "urban", "age", "experience", "experience_sq", "class_5", 

@@ -18,6 +18,9 @@ absent <- readRDS("../../../data/Raw/NLFS_II/NLFS_II_absenteeData.Rds")
 # occupation, migration for work, chores, overtime, firm size, industry, wage, 
 #formal and informal emplpoyment.
 
+dist <- family %>% 
+  select(c("psu", "hhid", "dist"))
+
 ############# Excel dataset ######
 caste_classify <- readxl::read_excel("../../../data/excel/NLFS_II/classification_NLFS_II.xlsx",
                                      sheet = "caste_II")%>%
@@ -68,6 +71,7 @@ workingPop <- wdat%>%
          fiscalyr = "2007/08")%>%
   left_join(., hchar, by = c("psu", "hhid")) %>%
   filter(q10 >=5) %>% 
+  left_join(., dist, by = c("psu", "hhid")) %>% 
   left_join(., edu_classify, by = c("q30" = "value")) %>% 
   left_join(., caste_classify, by = c("q11" = "value")) %>% 
   left_join(., chores, by = c("psu", "hhid", "idcode")) %>% 
@@ -150,7 +154,7 @@ formal <- employedPop %>%
 sdat <- employedPop %>% 
   filter(workingClasses == "Employed") %>% 
   left_join(., formal, by = c("psu", "hhid", "idcode")) %>% 
-  select(c("psu", "hhid", "year", "child_12", "hh_size", "dependent", "dep_ratio",
+  select(c("psu", "hhid", "year", "dist", "child_12", "hh_size", "dependent", "dep_ratio",
            "education", "yrs_schooling", "average_yrs", "caste_group_6","tot_chores_hrs",
            "female", "married", "voc_train",
            "urban", "age", "experience", "experience_sq", "class_5", 
