@@ -23,7 +23,7 @@ data1 <- readRDS("../../../Data/Cleaned/Pooled/Pooled.RDS") %>%
   filter(year == 2018)
 
 bdat <- fixest::feols(formal_employment ~ HH_formal + dep_ratio + female + urban +
-                        experience + experience_sq + yrs_schooling , data = data)  
+                        experience + experience_sq + yrs_schooling | factor(dist), data = data)  
 
 etable(bdat)
 adat <- fixest::feols(formal_employment ~ HH_formal + dep_ratio + female + urban + 
