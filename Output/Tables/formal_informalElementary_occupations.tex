@@ -37,3 +37,44 @@
 \end{table}
 
 
+
+\begin{table}[htbp]
+   \caption{Formal informal\_Elementary\_occupations}
+   \centering
+   \begin{adjustbox}{width = \textwidth, center}
+      \begin{tabular}{lcccccc}
+         \tabularnewline \midrule \midrule
+         Dependent Variable: & \multicolumn{6}{c}{formal\_employment}\\
+         Model:                    & (1)                     & (2)                     & (3)                     & (4)                     & (5)                     & (6)\\  
+         \midrule
+         \emph{Variables}\\
+         Constant                  & -0.4031$^{***}$         &                         &                         & -0.1378$^{***}$         &                         &   \\   
+                                   & (0.0466)                &                         &                         & (0.0487)                &                         &   \\   
+         Formal members            & 0.1722$^{***}$          & 0.1788                  & 0.1666                  & 0.1398$^{***}$          & 0.1394                  & 0.1311\\   
+                                   & (0.0268)                & (0.0508)                & (0.0575)                & (0.0320)                & (0.0435)                & (0.0353)\\   
+         Dependent                 & 0.0526                  & 0.0567                  & 0.0324                  & -0.0442                 & -0.0472$^{**}$          & -0.0625$^{**}$\\   
+                                   & (0.0601)                & (0.0806)                & (0.0989)                & (0.0613)                & (0.0015)                & (0.0020)\\   
+         experience                & 0.0270$^{***}$          & 0.0265$^{*}$            & 0.0253$^{**}$           & 0.0135$^{***}$          & 0.0135                  & 0.0114\\   
+                                   & (0.0033)                & (0.0021)                & (0.0006)                & (0.0032)                & (0.0036)                & (0.0046)\\   
+         experience\_sq            & -0.0003$^{***}$         & -0.0003                 & -0.0003$^{*}$           & -0.0001$^{**}$          & -0.0001                 & $-9.67\times 10^{-5}$\\    
+                                   & ($6.54\times 10^{-5}$)  & ($6.41\times 10^{-5}$)  & ($3.04\times 10^{-5}$)  & ($6.35\times 10^{-5}$)  & ($8.45\times 10^{-5}$)  & ($8.69\times 10^{-5}$)\\    
+         Years of schooling        & 0.0376$^{***}$          & 0.0356$^{**}$           & 0.0324$^{**}$           & 0.0169$^{***}$          & 0.0173$^{*}$            & 0.0149\\   
+                                   & (0.0031)                & (0.0013)                & (0.0013)                & (0.0033)                & (0.0014)                & (0.0025)\\   
+         \midrule
+         \emph{Fixed-effects}\\
+         Female                    &                         & Yes                     & Yes                     &                         & Yes                     & Yes\\  
+         urban                     &                         & Yes                     & Yes                     &                         & Yes                     & Yes\\  
+         factor(caste\_group\_6)   &                         &                         & Yes                     &                         &                         & Yes\\  
+         factor(dist)              &                         &                         & Yes                     &                         &                         & Yes\\  
+         \midrule
+         \emph{Fit statistics}\\
+         Observations              & 1,147                   & 1,147                   & 1,147                   & 975                     & 975                     & 975\\  
+         R$^2$                     & 0.18648                 & 0.18890                 & 0.27978                 & 0.07088                 & 0.07242                 & 0.15804\\  
+         Within R$^2$              &                         & 0.17640                 & 0.14716                 &                         & 0.07191                 & 0.06013\\  
+         \midrule \midrule
+         \multicolumn{7}{l}{\emph{Signif. Codes: ***: 0.01, **: 0.05, *: 0.1}}\\
+      \end{tabular}
+   \end{adjustbox}
+\end{table}
+
+

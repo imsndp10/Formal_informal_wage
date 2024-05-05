@@ -76,3 +76,44 @@
 \end{table}
 
 
+
+\begin{table}[htbp]
+   \caption{Formal informal\_Managers}
+   \centering
+   \begin{adjustbox}{width = \textwidth, center}
+      \begin{tabular}{lcccccc}
+         \tabularnewline \midrule \midrule
+         Dependent Variable: & \multicolumn{6}{c}{formal\_employment}\\
+         Model:                    & (1)                     & (2)            & (3)          & (4)             & (5)                    & (6)\\  
+         \midrule
+         \emph{Variables}\\
+         Constant                  & 0.0672                  &                &              & -0.0731         &                        &   \\   
+                                   & (0.0478)                &                &              & (0.0691)        &                        &   \\   
+         Formal members            & 0.1098$^{***}$          & 0.1204         & 0.1173       & 0.1382$^{***}$  & 0.1463$^{**}$          & 0.1361$^{***}$\\   
+                                   & (0.0193)                & (0.0476)       & (0.0364)     & (0.0206)        & (0.0046)               & (0.0017)\\   
+         Dependent                 & 0.0109                  & -0.0227$^{**}$ & -0.0633      & -0.1675$^{***}$ & -0.1683$^{**}$         & -0.1366\\   
+                                   & (0.0551)                & (0.0010)       & (0.0275)     & (0.0611)        & (0.0098)               & (0.0486)\\   
+         experience                & 0.0384$^{***}$          & 0.0377$^{**}$  & 0.0389$^{*}$ & 0.0210$^{***}$  & 0.0200                 & 0.0180\\   
+                                   & (0.0029)                & (0.0030)       & (0.0046)     & (0.0038)        & (0.0042)               & (0.0067)\\   
+         experience\_sq            & -0.0006$^{***}$         & -0.0006        & -0.0007      & -0.0001         & -0.0001                & $-7.84\times 10^{-5}$\\    
+                                   & ($7.42\times 10^{-5}$)  & (0.0001)       & (0.0002)     & (0.0001)        & ($9.7\times 10^{-5}$)  & (0.0002)\\   
+         Years of schooling        & 0.0157$^{***}$          & 0.0169         & 0.0169       & 0.0244$^{***}$  & 0.0215                 & 0.0202\\   
+                                   & (0.0028)                & (0.0068)       & (0.0082)     & (0.0041)        & (0.0108)               & (0.0091)\\   
+         \midrule
+         \emph{Fixed-effects}\\
+         Female                    &                         & Yes            & Yes          &                 & Yes                    & Yes\\  
+         urban                     &                         & Yes            & Yes          &                 & Yes                    & Yes\\  
+         factor(caste\_group\_6)   &                         &                & Yes          &                 &                        & Yes\\  
+         factor(dist)              &                         &                & Yes          &                 &                        & Yes\\  
+         \midrule
+         \emph{Fit statistics}\\
+         Observations              & 1,745                   & 1,745          & 1,745        & 1,545           & 1,545                  & 1,545\\  
+         R$^2$                     & 0.16999                 & 0.17991        & 0.24709      & 0.16274         & 0.16712                & 0.23495\\  
+         Within R$^2$              &                         & 0.16238        & 0.16660      &                 & 0.14239                & 0.12699\\  
+         \midrule \midrule
+         \multicolumn{7}{l}{\emph{Signif. Codes: ***: 0.01, **: 0.05, *: 0.1}}\\
+      \end{tabular}
+   \end{adjustbox}
+\end{table}
+
+
