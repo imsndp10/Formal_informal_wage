@@ -36,16 +36,17 @@ plotFun <- function(Year, industry= NULL, job=NULL, Title = element_blank()){
   ddat <- dataFunc(Year, industry, job)
   plot <- ggplot(data = ddat)+
     geom_density(aes(x = yrs_schooling, fill = factor(formal_employment)),stat = "density", 
-                 position = "identity", alpha = 0.3 )+
+                 position = "identity", alpha = 0.3, linewidth = 0.2 )+
     geom_vline(aes(xintercept = mean_schooling, color = factor(formal_employment)), linetype = "longdash",
-               show.legend = FALSE, linewidth = 0.5 )+
+               show.legend = FALSE, linewidth = 0.2 )+
     theme_bw()+
-    theme(legend.position = "top",panel.grid.minor = element_blank(),
-          text = element_text(family = "serif",size = 9))+
     labs(title = Title,
          x = element_blank(),
          y = element_blank(),
          fill = "Employment")+
+    theme(legend.position = "top",panel.grid.minor = element_blank(),
+          text = element_text(family = "serif",size = 9),
+          plot.title = element_text(family = "serif",size = 9))+
     scale_color_brewer(type = "seq",  palette ="Set1" )+
     #scale_fill_brewer(type = "seq", palette = "Set1")+
     scale_fill_discrete(labels = c("Informal", "Formal"))+
@@ -85,4 +86,5 @@ b <- ggpubr::annotate_figure(a, left = grid::textGrob("Density", rot = 90,
                                                 gp = grid::gpar(fontfamily = "serif", fontsize = 10)))
 
 ggsave(filename = "yrs_schooling.pdf",plot = b,device = "pdf",width = 14,height = 12,
-       units = c("cm"),path = "../../../Output/Figure")
+       units = c("cm"),path = "../../../Final Paper/final_paper/images")
+
