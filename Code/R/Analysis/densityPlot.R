@@ -5,6 +5,8 @@ cat("\014")
 
 library("tidyverse")
 library("ggplot2")
+library("gridExtra")
+library("ggpubr")
 
 
 dataFunc <- function(Year, industry = NULL, job = NULL){
@@ -27,7 +29,6 @@ dataFunc <- function(Year, industry = NULL, job = NULL){
     ungroup()
   return(Data)
 }
-
 
 
 plotFun <- function(Year, industry= NULL, job=NULL){
@@ -58,4 +59,15 @@ Plot3 <- plotFun(Year = 2008, industry = c("Market_services", "Non_Market_servic
                                            "Arts_entertain"),
                  job = c("Elementary_occupations", "Plant_operator",
                          "Agri_trade"))
+Plot4 <- plotFun(Year = 2018, industry = c("Market_services", "Non_Market_services",
+                                           "Arts_entertain"),
+                 job = c("Managers"))
+Plot5 <- plotFun(Year = 2018, industry = c("Market_services", "Non_Market_services",
+                                           "Arts_entertain"),
+                 job = c("Clerical_sales"))
+Plot6 <- plotFun(Year = 2018, industry = c("Market_services", "Non_Market_services",
+                                           "Arts_entertain"),
+                 job = c("Elementary_occupations", "Plant_operator",
+                         "Agri_trade"))
+
 
