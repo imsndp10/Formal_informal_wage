@@ -9,8 +9,8 @@ library("ggplot2")
 
 #plot data preparation
 
-dat <- list.files("../../../Data/Cleaned/Pooled/test")
-b <- list.files("../../../Data/Cleaned/Pooled/test", full.names = TRUE)
+dat <- list.files("../../../Data/Cleaned/Pooled/test2")
+b <- list.files("../../../Data/Cleaned/Pooled/test2", full.names = TRUE)
 objectname <- gsub(".RDS", "", dat)
 sdat <- list()
 for (i in c(1: length(dat))){
@@ -29,8 +29,8 @@ for(i in c(1:length(dat))){
            gender = Split[[i]][3],
            region = Split[[i]][5],
            industry = Split[[i]][7],
-           forumla = Split[[i]][9],
-           job = if_else(length(dat) > 10, Split[[i]][11], NA))
+           forumla = Split[[i]][8],
+           job = if_else(length(dat) > 8, Split[[i]][9], NA))
 }
 
 test <- do.call("rbind", sdat)
@@ -56,29 +56,61 @@ longtest <- pivot_longer(data = test, cols =  c("duqf_SE", "l.duqf_SE",
 
 
 #PLot here
-pdat <- longtest %>% 
-  filter(forumla == "NoInd" & industry == "ser")
 
-plotdat <- pivot_wider(data = pdat, names_from = estimate,
-                       values_from = value) %>% 
-  filter(tau <=0.95 & tau >=0.05)
+plotFun <- function(Industry, Job = NULL){
+  if(is.null(Job)){
+  pdat <- longtest %>% 
+    filter(industry == Industry & is.na(job))  
+  }else{
+  pdat <- longtest %>% 
+    filter(industry == Industry, job == Job)
+  }
+  plotdat <- pivot_wider(data = pdat, names_from = estimate,
+                         values_from = value) %>% 
+    filter(tau <=0.95 & tau >=0.05)
+  plot <- ggplot(data = plotdat)+
+    geom_line(aes(x = tau, y = coefficient, color = as.factor(year)),show.legend = FALSE)+
+    geom_ribbon(aes(x = tau, ymin=lower, ymax = upper, alpha = 0.2,
+                    fill = as.factor(year)),
+                linetype = 3, alpha = 0.1) +
+    facet_grid(cols = vars(Effect))+
+    labs(x = "tau",
+         y = "Log hourly wage",
+         fill = "Year")  +
+    geom_hline(yintercept = 0, linetype = "dashed", linewidth = 0.8)+
+    theme_bw()+
+    theme(panel.grid.minor = element_blank(),
+          legend.position = "top")
+  
+  return(plot)
+}
 
-plot <- ggplot(data = plotdat)+
-  geom_line(aes(x = tau, y = coefficient, color = as.factor(year)),show.legend = FALSE)+
-  geom_ribbon(aes(x = tau, ymin=lower, ymax = upper, alpha = 0.2,
-                  fill = as.factor(year)),
-              linetype = 3, alpha = 0.1) +
-  facet_grid(cols = vars(Effect))+
-  labs(x = "tau",
-       y = "Log hourly wage",
-       fill = "Year")  +
-  geom_hline(yintercept = 0, linetype = "dashed", linewidth = 0.8)+
-  theme_bw()+
-  theme(panel.grid.minor = element_blank(),
-        legend.position = "top")
+a <- plotFun(Industry = "ser") + labs(title = "service", x = element_blank()) 
+b <- plotFun(Industry = "all")+ labs(title = "overall")
+c <- plotFun(Industry = "ser", Job = "Managers") + labs(title = "service managers", x = element_blank())
+d <- plotFun(Industry = "ser", Job = "Clerical")+ labs(title = "service Clerical", x = element_blank())
+e <- plotFun(Industry = "ser", Job = "Elementary")+ labs(title = "service Elementary", x = element_blank())
+f <- plotFun(Industry = "all", Job = "Managers")+ labs(title = "overall managers")
+g <- plotFun(Industry = "all", Job = "Clerical")+ labs(title = "overall Clerical")
+h <- plotFun(Industry = "all", Job = "Elementary")+ labs(title = "overall Elementary")
 
+i <- ggpubr::ggarrange(a, b, nrow = 2, ncol = 1, common.legend = TRUE,
+                       legend = "top")
+j <- ggpubr::ggarrange(c, f, nrow = 2, ncol = 1, common.legend = TRUE,
+                       legend = "top")
+k <- ggpubr::ggarrange(d, g, nrow = 2, ncol = 1, common.legend = TRUE,
+                       legend = "top")
+l <- ggpubr::ggarrange(f, h, nrow = 2, ncol = 1, common.legend = TRUE,
+                       legend = "top")
 
-
+ggsave(filename = "service_overall.pdf",plot = i,device = "pdf",width = 14,height = 12,
+       units = c("cm"),path = "../../../Final Paper/final_paper/images")
+ggsave(filename = "service_overall_managers.pdf",plot = j,device = "pdf",width = 14,height = 12,
+       units = c("cm"),path = "../../../Final Paper/final_paper/images")
+ggsave(filename = "service_overall_clerical.pdf",plot = k,device = "pdf",width = 14,height = 12,
+       units = c("cm"),path = "../../../Final Paper/final_paper/images")
+ggsave(filename = "service_overall_elementary.pdf",plot = l,device = "pdf",width = 14,height = 12,
+       units = c("cm"),path = "../../../Final Paper/final_paper/images")
 
 
 
