@@ -30,10 +30,16 @@ for(i in c(1:length(dat))){
            region = Split[[i]][5],
            industry = Split[[i]][7],
            forumla = Split[[i]][8],
-           job = if_else(length(dat) > 8, Split[[i]][9], NA))
+           job = if_else(length(dat) > 8, Split[[i]][9], NA),
+           job = if_else(is.na(job), "overall", job))
 }
 
-test <- do.call("rbind", sdat)
+test <- do.call("rbind", sdat) %>% 
+  mutate(job = factor(job,
+                      levels = c("overall", "Managers", "Clerical",
+                                 "Elementary"),
+                      labels = c("Overall", "Upper tier", "Middle tier",
+                                 "Lower tier")))
 row.names(test) <- NULL
 
 longtest <- pivot_longer(data = test, cols =  c("duqf_SE", "l.duqf_SE", 
@@ -57,33 +63,42 @@ longtest <- pivot_longer(data = test, cols =  c("duqf_SE", "l.duqf_SE",
 
 #PLot here
 
-plotFun <- function(Industry, Job = NULL){
-  if(is.null(Job)){
+plotFun <- function(Industry){
   pdat <- longtest %>% 
-    filter(industry == Industry & is.na(job))  
-  }else{
-  pdat <- longtest %>% 
-    filter(industry == Industry, job == Job)
-  }
+    filter(industry == Industry)  
   plotdat <- pivot_wider(data = pdat, names_from = estimate,
                          values_from = value) %>% 
     filter(tau <=0.95 & tau >=0.05)
   plot <- ggplot(data = plotdat)+
-    geom_line(aes(x = tau, y = coefficient, color = as.factor(year)),show.legend = FALSE)+
+    geom_line(aes(x = tau, y = coefficient, color = as.factor(year)),
+              linewidth = 0.6)+
+      scale_color_manual(values = c("#466CA6", "#A41D1A"),
+                         labels = c("2008", "2018"))+
     geom_ribbon(aes(x = tau, ymin=lower, ymax = upper, alpha = 0.2,
                     fill = as.factor(year)),
-                linetype = 3, alpha = 0.1) +
-    facet_grid(cols = vars(Effect))+
+                linetype = 3, alpha = 0.3,show.legend = FALSE) +
+    scale_fill_manual(values = c("#466CA6", "#A41D1A"),
+                      labels = c("2008", "2018"))+
+    facet_grid(cols = vars(Effect), rows = vars(job))+
     labs(x = "tau",
          y = "Log hourly wage",
-         fill = "Year")  +
+         color = "Year")  +
     geom_hline(yintercept = 0, linetype = "dashed", linewidth = 0.8)+
     theme_bw()+
     theme(panel.grid.minor = element_blank(),
-          legend.position = "top")
+          legend.position = "top",
+          strip.background = element_rect(fill = "#D6CFC4"))
+    
   
   return(plot)
 }
+
+finalPlot <- plotFun(Industry = "ser")
+
+ggsave(filename = "service.pdf",plot = finalPlot,device = "pdf",width = 14,height = 18,
+       units = c("cm"), dpi = 300,path = "../../../Final Paper/final_paper/images")
+
+
 
 a <- plotFun(Industry = "ser") + labs(title = "service", x = element_blank()) 
 b <- plotFun(Industry = "all")+ labs(title = "overall")
