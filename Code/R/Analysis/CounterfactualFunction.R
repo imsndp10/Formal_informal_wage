@@ -179,11 +179,12 @@ tictoc::toc()
 h2 <- CounterFac(Year = 2008,Gender = "all", region = "all", industry = "ser",
                  job = c("Clerical_sales"), formType = "JM_NoInd_NoJob",
                  reg = 100)
+tictoc::tic()
 h3 <- CounterFac(Year = 2008,Gender = "all", region = "all", industry = "ser",
                  job = c("Elementary_occupations", "Plant_operator",
                          "Agri_trade"),formType = "JM_NoInd_NoJob",
                  reg = 100)
-
+tictoc::toc()
 i <- CounterFac(Year = 2008,Gender = "all", region = "all", industry = "man_ser" ,formType = "JM_NoInd",
                 reg = 2)
 
