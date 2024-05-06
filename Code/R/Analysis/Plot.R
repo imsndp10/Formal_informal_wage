@@ -118,9 +118,9 @@ ggsave(filename = "service_overall_elementary.pdf",plot = l,device = "pdf",width
        units = c("cm"),path = "../../../Final Paper/final_paper/images")
 
 
-ggsave(filename = "service.pdf",plot = i,device = "pdf",width = 14,height = 18,
+ggsave(filename = "service.pdf",plot = m,device = "pdf",width = 14,height = 18,
        units = c("cm"),path = "../../../Final Paper/final_paper/images")
-ggsave(filename = "overall.pdf",plot = j,device = "pdf",width = 14,height = 18,
+ggsave(filename = "overall.pdf",plot = n,device = "pdf",width = 14,height = 18,
        units = c("cm"),path = "../../../Final Paper/final_paper/images")
 
 
