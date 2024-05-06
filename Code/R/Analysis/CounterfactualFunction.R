@@ -12,7 +12,8 @@ library("Counterfactual")
 
 dataGen <- function(Year, Gender = c("all", "male", "female"), 
                     region = c("all", "urban", "rural"),
-                    industry = c("all", "man", "ser", "man_ser")){
+                    industry = c("all", "man", "ser", "man_ser"),
+                    job = NULL){
   data <- readRDS("../../../Data/Cleaned/Pooled/Pooled.RDS") %>%
     mutate(log_wage = log(hourly_wage)) %>% 
     filter(year == Year)
@@ -47,19 +48,26 @@ dataGen <- function(Year, Gender = c("all", "male", "female"),
       filter(job_sector %in% c("Manufacturing", "Market_services", "Non_Market_services",
                                "Arts_entertain"))
   }
-  return(data)
+  if(is.null(job)){
+    Data <- data
+  } else if(!is.null(job)){
+    Data <- data %>% 
+      filter(class_5 %in%job)
+  }
+  return(Data)
 }
 
 
-a <- dataGen(Year = 2008,Gender = "all", region = "all",industry = "ser")
+a <- dataGen(Year = 2018,Gender = "all", region = "all",industry = "ser", job = c("Managers"))
 
 CounterFac <- function(Year, Gender = c("all", "male", "female"), 
                        region = c("all", "urban", "rural"),
-                       industry = c("all", "man", "ser", "man_ser"), 
-                       formType = c("HH", "JM_NoInd", "JM_Ind"), reg){
-  data <- dataGen(Year, Gender,region,industry)
-  HH <- as.formula("log_wage ~ education + experience + experience_sq +
-                       married + hh_size + child_12 + voc_train + tot_chores_hrs")
+                       industry = c("all", "man", "ser", "man_ser"),
+                       job = NULL,
+                       formType = c("HH", "JM_NoInd", "JM_Ind", "JM_NoInd_NoJob"), reg){
+  data <- dataGen(Year, Gender,region,industry, job)
+  HH <- as.formula("log_wage ~ yrs_schooling + experience + experience_sq + caste_group_6+
+                       married + hh_size + child_12 + tot_chores_hrs")
   HH_female <- update.formula(HH, . ~ . + female)
   HH_urban <- update.formula(HH, . ~ . + urban)
   HH_female_urban <- update.formula(HH_urban, . ~ . + female)
@@ -78,8 +86,9 @@ CounterFac <- function(Year, Gender = c("all", "male", "female"),
   JM_NoInd_formula <- update.formula(HH_formula, . ~ . + migrated_fr_job + overtime_40 + class_5)
   JM_Ind_formula <- update.formula(HH_formula, . ~ . + migrated_fr_job + overtime_40 + class_5 +
                                             job_sector)
-  Formula <- switch(formType, HH = HH_formula, JM_NoInd = JM_NoInd_formula,
-                    JM_Ind = JM_Ind_formula)
+  JM_NoInd_NoJob_formula <- update.formula(JM_NoInd_formula, .~. -migrated_fr_job -overtime_40 -class_5)
+  Formula <- switch(formType, "HH" = HH_formula, "JM_NoInd" = JM_NoInd_formula,
+                    "JM_Ind" = JM_Ind_formula, "JM_NoInd_NoJob" = JM_NoInd_NoJob_formula)
   
   taus <-c(1:99)/100
   first <- sum(as.double(taus <= .10))
@@ -112,8 +121,15 @@ CounterFac <- function(Year, Gender = c("all", "male", "female"),
     u.duqf_TE = (logitres$resTE)[,4],
     tau = c(1:99)/100
   )
-  file_name <- paste0(Year, "_", "gender_", Gender, "_", "region_", region, "_",
-                      "industry_",industry, "_", formType)
+  if(is.null(job)){
+    file_name <- paste0(Year, "_", "gender_", Gender, "_", "region_", region, "_",
+                        "industry_",industry, "_", formType)  
+  } else if(!is.null(job)){
+    file_name <- paste0(Year, "_", "gender_", Gender, "_", "region_", region, "_",
+                        "industry_",industry, "_", formType, "_", job[1])
+  }
+  
+  
   return(write_rds(x = estimates, file = paste0("../../../Data/Cleaned/Pooled/test/", file_name, ".RDS"),
                    compress = "gz"))
 }  
@@ -128,7 +144,18 @@ b <- CounterFac(Year = 2018,Gender = "all", region = "all",industry = "all",form
 c <- CounterFac(Year = 2018,Gender = "all", region = "all", industry = "man" ,formType = "JM_NoInd",
                 reg = 2)
 
-d <- CounterFac(Year = 2018,Gender = "all", region = "all", industry = "ser" ,formType = "JM_NoInd",
+d <- CounterFac(Year = 2018,Gender = "all", region = "all", industry = "ser" ,formType = "JM_NoInd_NoJob",
+                reg = 100)
+tictoc::tic()
+d1 <- CounterFac(Year = 2018,Gender = "all", region = "all", industry = "ser" ,
+                 job = c("Managers"), formType = "JM_NoInd_NoJob", reg = 100)
+tictoc::toc()
+d2 <- CounterFac(Year = 2018,Gender = "all", region = "all", industry = "ser",
+                 job = c("Clerical_sales"), formType = "JM_NoInd_NoJob",
+                 reg = 100)
+d3 <- CounterFac(Year = 2018,Gender = "all", region = "all", industry = "ser",
+                 job = c("Elementary_occupations", "Plant_operator",
+                         "Agri_trade"),formType = "JM_NoInd_NoJob",
                 reg = 100)
 
 e <- CounterFac(Year = 2018,Gender = "all", region = "all", industry = "man_ser" ,formType = "JM_NoInd",
@@ -139,11 +166,23 @@ f <- CounterFac(Year = 2008,Gender = "all", region = "all",industry = "all",form
                 reg = 100)
 tictoc::toc()
 
+
 g <- CounterFac(Year = 2008,Gender = "all", region = "all", industry = "man" ,formType = "JM_NoInd",
                 reg = 100)
 
-h <- CounterFac(Year = 2008,Gender = "all", region = "all", industry = "ser" ,formType = "JM_NoInd",
+h <- CounterFac(Year = 2008,Gender = "all", region = "all", industry = "ser" ,formType = "JM_NoInd_NoJob",
                 reg = 100)
+tictoc::tic()
+h1 <- CounterFac(Year = 2008,Gender = "all", region = "all", industry = "ser" ,
+                 job = c("Managers"), formType = "JM_NoInd_NoJob", reg = 100)
+tictoc::toc()
+h2 <- CounterFac(Year = 2008,Gender = "all", region = "all", industry = "ser",
+                 job = c("Clerical_sales"), formType = "JM_NoInd_NoJob",
+                 reg = 100)
+h3 <- CounterFac(Year = 2008,Gender = "all", region = "all", industry = "ser",
+                 job = c("Elementary_occupations", "Plant_operator",
+                         "Agri_trade"),formType = "JM_NoInd_NoJob",
+                 reg = 100)
 
 i <- CounterFac(Year = 2008,Gender = "all", region = "all", industry = "man_ser" ,formType = "JM_NoInd",
                 reg = 2)
