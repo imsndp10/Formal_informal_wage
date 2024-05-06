@@ -29,7 +29,8 @@ for(i in c(1:length(dat))){
            gender = Split[[i]][3],
            region = Split[[i]][5],
            industry = Split[[i]][7],
-           forumla = Split[[i]][9])
+           forumla = Split[[i]][9],
+           job = if_else(length(dat) > 10, Split[[i]][11], NA))
 }
 
 test <- do.call("rbind", sdat)

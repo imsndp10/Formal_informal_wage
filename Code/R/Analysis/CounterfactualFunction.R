@@ -57,14 +57,11 @@ dataGen <- function(Year, Gender = c("all", "male", "female"),
   return(Data)
 }
 
-
-a <- dataGen(Year = 2018,Gender = "all", region = "all",industry = "ser", job = c("Managers"))
-
 CounterFac <- function(Year, Gender = c("all", "male", "female"), 
                        region = c("all", "urban", "rural"),
                        industry = c("all", "man", "ser", "man_ser"),
                        job = NULL,
-                       formType = c("HH", "JM_NoInd", "JM_Ind", "JM_NoInd_NoJob"), reg){
+                       formType = c("HH", "JmNoInd", "JmInd", "JmNoIndNoJob"), reg){
   data <- dataGen(Year, Gender,region,industry, job)
   HH <- as.formula("log_wage ~ yrs_schooling + experience + experience_sq + caste_group_6+
                        married + hh_size + child_12 + tot_chores_hrs")
@@ -87,8 +84,8 @@ CounterFac <- function(Year, Gender = c("all", "male", "female"),
   JM_Ind_formula <- update.formula(HH_formula, . ~ . + migrated_fr_job + overtime_40 + class_5 +
                                             job_sector)
   JM_NoInd_NoJob_formula <- update.formula(JM_NoInd_formula, .~. -migrated_fr_job -overtime_40 -class_5)
-  Formula <- switch(formType, "HH" = HH_formula, "JM_NoInd" = JM_NoInd_formula,
-                    "JM_Ind" = JM_Ind_formula, "JM_NoInd_NoJob" = JM_NoInd_NoJob_formula)
+  Formula <- switch(formType, "HH" = HH_formula, "JmNoInd" = JM_NoInd_formula,
+                    "JmInd" = JM_Ind_formula, "JmNoIndNoJob" = JM_NoInd_NoJob_formula)
   
   taus <-c(1:99)/100
   first <- sum(as.double(taus <= .10))
@@ -134,60 +131,53 @@ CounterFac <- function(Year, Gender = c("all", "male", "female"),
                    compress = "gz"))
 }  
 
-
-a <- CounterFac(Year = 2018,Gender = "all", region = "all",industry = "all",formType = "HH",
-                reg = 2)
-
-b <- CounterFac(Year = 2018,Gender = "all", region = "all",industry = "all",formType = "JM_NoInd",
+d <- CounterFac(Year = 2018,Gender = "all", region = "all", industry = "ser" ,formType = "JmNoIndNoJob",
                 reg = 100)
-
-c <- CounterFac(Year = 2018,Gender = "all", region = "all", industry = "man" ,formType = "JM_NoInd",
-                reg = 2)
-
-d <- CounterFac(Year = 2018,Gender = "all", region = "all", industry = "ser" ,formType = "JM_NoInd_NoJob",
-                reg = 100)
-tictoc::tic()
 d1 <- CounterFac(Year = 2018,Gender = "all", region = "all", industry = "ser" ,
-                 job = c("Managers"), formType = "JM_NoInd_NoJob", reg = 100)
-tictoc::toc()
+                 job = c("Managers"), formType = "JmNoIndNoJob", reg = 100)
 d2 <- CounterFac(Year = 2018,Gender = "all", region = "all", industry = "ser",
-                 job = c("Clerical_sales"), formType = "JM_NoInd_NoJob",
+                 job = c("Clerical_sales"), formType = "JmNoIndNoJob",
                  reg = 100)
 d3 <- CounterFac(Year = 2018,Gender = "all", region = "all", industry = "ser",
                  job = c("Elementary_occupations", "Plant_operator",
-                         "Agri_trade"),formType = "JM_NoInd_NoJob",
+                         "Agri_trade"),formType = "JmNoIndNoJob",
                 reg = 100)
 
-e <- CounterFac(Year = 2018,Gender = "all", region = "all", industry = "man_ser" ,formType = "JM_NoInd",
-                reg = 2)
 
-tictoc::tic()
-f <- CounterFac(Year = 2008,Gender = "all", region = "all",industry = "all",formType = "JM_NoInd",
+e <- CounterFac(Year = 2018,Gender = "all", region = "all", industry = "all" ,formType = "JmNoIndNoJob",
                 reg = 100)
-tictoc::toc()
-
-
-g <- CounterFac(Year = 2008,Gender = "all", region = "all", industry = "man" ,formType = "JM_NoInd",
-                reg = 100)
-
-h <- CounterFac(Year = 2008,Gender = "all", region = "all", industry = "ser" ,formType = "JM_NoInd_NoJob",
-                reg = 100)
-tictoc::tic()
-h1 <- CounterFac(Year = 2008,Gender = "all", region = "all", industry = "ser" ,
-                 job = c("Managers"), formType = "JM_NoInd_NoJob", reg = 100)
-tictoc::toc()
-h2 <- CounterFac(Year = 2008,Gender = "all", region = "all", industry = "ser",
-                 job = c("Clerical_sales"), formType = "JM_NoInd_NoJob",
+e1 <- CounterFac(Year = 2018,Gender = "all", region = "all", industry = "all" ,
+                 job = c("Managers"), formType = "JmNoIndNoJob", reg = 100)
+e2 <- CounterFac(Year = 2018,Gender = "all", region = "all", industry = "all",
+                 job = c("Clerical_sales"), formType = "JmNoIndNoJob",
                  reg = 100)
-tictoc::tic()
+e3 <- CounterFac(Year = 2018,Gender = "all", region = "all", industry = "all",
+                 job = c("Elementary_occupations", "Plant_operator",
+                         "Agri_trade"),formType = "JmNoIndNoJob",
+                 reg = 100)
+
+
+h <- CounterFac(Year = 2008,Gender = "all", region = "all", industry = "ser" ,formType = "JmNoIndNoJob",
+                reg = 100)
+h1 <- CounterFac(Year = 2008,Gender = "all", region = "all", industry = "ser" ,
+                 job = c("Managers"), formType = "JmNoIndNoJob", reg = 100)
+h2 <- CounterFac(Year = 2008,Gender = "all", region = "all", industry = "ser",
+                 job = c("Clerical_sales"), formType = "JmNoIndNoJob",
+                 reg = 100)
 h3 <- CounterFac(Year = 2008,Gender = "all", region = "all", industry = "ser",
                  job = c("Elementary_occupations", "Plant_operator",
-                         "Agri_trade"),formType = "JM_NoInd_NoJob",
+                         "Agri_trade"),formType = "JmNoIndNoJob",
                  reg = 100)
-tictoc::toc()
-i <- CounterFac(Year = 2008,Gender = "all", region = "all", industry = "man_ser" ,formType = "JM_NoInd",
-                reg = 2)
 
 
-
-
+i <- CounterFac(Year = 2008,Gender = "all", region = "all", industry = "ser" ,formType = "JmNoIndNoJob",
+                reg = 100)
+i1 <- CounterFac(Year = 2008,Gender = "all", region = "all", industry = "ser" ,
+                 job = c("Managers"), formType = "JmNoIndNoJob", reg = 100)
+i2 <- CounterFac(Year = 2008,Gender = "all", region = "all", industry = "ser",
+                 job = c("Clerical_sales"), formType = "JmNoIndNoJob",
+                 reg = 100)
+i3 <- CounterFac(Year = 2008,Gender = "all", region = "all", industry = "ser",
+                 job = c("Elementary_occupations", "Plant_operator",
+                         "Agri_trade"),formType = "JmNoIndNoJob",
+                 reg = 100)
