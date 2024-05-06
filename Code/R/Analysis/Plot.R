@@ -103,6 +103,11 @@ k <- ggpubr::ggarrange(d, g, nrow = 2, ncol = 1, common.legend = TRUE,
 l <- ggpubr::ggarrange(f, h, nrow = 2, ncol = 1, common.legend = TRUE,
                        legend = "top")
 
+m <- ggpubr::ggarrange(a, c,d,e, nrow = 4, ncol = 1, common.legend = TRUE,
+                       legend = "top")
+n <- ggpubr::ggarrange(b, f,g,h, nrow = 4, ncol = 1, common.legend = TRUE,
+                       legend = "top")
+
 ggsave(filename = "service_overall.pdf",plot = i,device = "pdf",width = 14,height = 12,
        units = c("cm"),path = "../../../Final Paper/final_paper/images")
 ggsave(filename = "service_overall_managers.pdf",plot = j,device = "pdf",width = 14,height = 12,
@@ -112,6 +117,11 @@ ggsave(filename = "service_overall_clerical.pdf",plot = k,device = "pdf",width =
 ggsave(filename = "service_overall_elementary.pdf",plot = l,device = "pdf",width = 14,height = 12,
        units = c("cm"),path = "../../../Final Paper/final_paper/images")
 
+
+ggsave(filename = "service.pdf",plot = i,device = "pdf",width = 14,height = 18,
+       units = c("cm"),path = "../../../Final Paper/final_paper/images")
+ggsave(filename = "overall.pdf",plot = j,device = "pdf",width = 14,height = 18,
+       units = c("cm"),path = "../../../Final Paper/final_paper/images")
 
 
    
