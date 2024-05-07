@@ -9,7 +9,6 @@ library("gridExtra")
 library("grid")
 library("ggpubr")
 
-
 dataFunc <- function(Year, industry = NULL, job = NULL){
   data <- readRDS("../../../Data/Cleaned/Pooled/Pooled.RDS") %>%
     group_by(psu, hhid, year) %>% 
@@ -26,7 +25,7 @@ dataFunc <- function(Year, industry = NULL, job = NULL){
   }
   Data <- Data %>% 
     group_by(formal_employment) %>% 
-    mutate(mean_schooling = mean(yrs_schooling)) %>% 
+    mutate(mean_wage = mean(log(hourly_wage))) %>% 
     ungroup()
   return(Data)
 }
@@ -35,11 +34,11 @@ dataFunc <- function(Year, industry = NULL, job = NULL){
 plotFun <- function(Year, industry= NULL, job=NULL, Title = element_blank()){
   ddat <- dataFunc(Year, industry, job)
   plot <- ggplot(data = ddat)+
-    geom_density(aes(x = yrs_schooling, fill = factor(formal_employment)),stat = "density", 
+    geom_density(aes(x = log(hourly_wage), fill = factor(formal_employment)),stat = "density", 
                  position = "identity", alpha = 0.3, linewidth = 0.2 )+
     scale_fill_manual(values = c("#466CA6", "#A41D1A"),
-                      labels = c("Informal", "Formal"))+
-    geom_vline(aes(xintercept = mean_schooling, color = factor(formal_employment)), linetype = "longdash",
+                       labels = c("Informal", "Formal"))+
+    geom_vline(aes(xintercept = mean_wage, color = factor(formal_employment)), linetype = "longdash",
                show.legend = FALSE, linewidth = 0.2 )+
     scale_color_manual(values = c("#466CA6", "#A41D1A"),
                        labels = c("Informal", "Formal"))+
@@ -51,19 +50,19 @@ plotFun <- function(Year, industry= NULL, job=NULL, Title = element_blank()){
     theme(legend.position = "top",panel.grid.minor = element_blank(),
           text = element_text(family = "serif",size = 9),
           plot.title = element_text(family = "serif",size = 9))+
+    scale_color_brewer(type = "seq",  palette ="Set1" )+
     #scale_fill_brewer(type = "seq", palette = "Set1")+
-    ##scale_fill_discrete(labels = c("Informal", "Formal"))+
     scale_y_continuous(breaks = 0.1)+
-    ylim(0,0.35)
+    ylim(0,2) + xlim(0, 7.5)
   grob <- grid::grobTree(grid::textGrob(paste0(Year), x=0.9,  y=0.9,
-                            gp=grid::gpar(fontsize=8, fontfamily="serif")))
+                                        gp=grid::gpar(fontsize=8, fontfamily="serif")))
   plot <- plot + annotation_custom(grob)
   return(plot)
 }
 
 Plot1 <- plotFun(Year = 2008, industry = c("Market_services", "Non_Market_services",
-                                        "Arts_entertain"),
-              job = c("Managers"), Title = "Managers")
+                                           "Arts_entertain"),
+                 job = c("Managers"), Title = "Managers")
 Plot2 <- plotFun(Year = 2008, industry = c("Market_services", "Non_Market_services",
                                            "Arts_entertain"),
                  job = c("Clerical_sales"), Title = "Clerical")
@@ -82,12 +81,12 @@ Plot6 <- plotFun(Year = 2018, industry = c("Market_services", "Non_Market_servic
                  job = c("Elementary_occupations", "Plant_operator",
                          "Agri_trade"))
 a <- ggpubr::ggarrange(Plot3, Plot2, Plot1, Plot6, Plot5, Plot4, ncol = 3, nrow = 2,
-                  common.legend = TRUE, legend = "top")
+                       common.legend = TRUE, legend = "top")
 b <- ggpubr::annotate_figure(a, left = grid::textGrob("Density", rot = 90,
-                                                 gp = grid::gpar(fontfamily = "serif", fontsize = 10)), 
-                        bottom = grid::textGrob("Years of schooling",
-                                                gp = grid::gpar(fontfamily = "serif", fontsize = 10)))
+                                                      gp = grid::gpar(fontfamily = "serif", fontsize = 10)), 
+                             bottom = grid::textGrob("Log hourly wages",
+                                                     gp = grid::gpar(fontfamily = "serif", fontsize = 10)))
 
-ggsave(filename = "yrs_schooling.pdf",plot = b,device = "pdf",width = 14,height = 12,
+ggsave(filename = "log_hourly_density_wages.pdf",plot = b,device = "pdf",width = 14,height = 12,
        units = c("cm"),path = "../../../Final Paper/final_paper/images")
 
