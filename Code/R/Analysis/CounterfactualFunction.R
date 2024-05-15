@@ -107,13 +107,16 @@ CounterFac <- function(Year, Gender = c("all", "male", "female"),
                             ncore= 11,
                             firs)
   estimates <- data.frame(
-    duqf_SE = (logitres$resSE)[,1], 
+    duqf_SE = (logitres$resSE)[,1],
+    duqf_SE_serror = (logitres$resSE)[,2],
     l.duqf_SE = (logitres$resSE)[,3], 
     u.duqf_SE = (logitres$resSE)[,4], 
-    duqf_CE = (logitres$resCE)[,1], 
+    duqf_CE = (logitres$resCE)[,1],
+    duqf_CE_serror = (logitres$resCE)[,2],
     l.duqf_CE = (logitres$resCE)[,3], 
     u.duqf_CE = (logitres$resCE)[,4], 
-    duqf_TE = (logitres$resTE)[,1], 
+    duqf_TE = (logitres$resTE)[,1],
+    duqf_TE_serror = (logitres$resTE)[,2],
     l.duqf_TE = (logitres$resTE)[,3], 
     u.duqf_TE = (logitres$resTE)[,4],
     tau = c(1:99)/100
@@ -183,3 +186,4 @@ i3 <- CounterFac(Year = 2008,Gender = "all", region = "all", industry = "all",
                  job = c("Elementary_occupations", "Plant_operator",
                          "Agri_trade"),formType = "JmNoIndNoJob",
                  reg = 100)
+
