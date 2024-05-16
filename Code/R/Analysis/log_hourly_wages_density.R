@@ -50,7 +50,6 @@ plotFun <- function(Year, industry= NULL, job=NULL, Title = element_blank()){
     theme(legend.position = "top",panel.grid.minor = element_blank(),
           text = element_text(family = "serif",size = 9),
           plot.title = element_text(family = "serif",size = 9))+
-    scale_color_brewer(type = "seq",  palette ="Set1" )+
     #scale_fill_brewer(type = "seq", palette = "Set1")+
     scale_y_continuous(breaks = 0.1)+
     ylim(0,2) + xlim(0, 7.5)
