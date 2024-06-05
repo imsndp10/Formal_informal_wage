@@ -15,22 +15,28 @@ Occupation proportion
 
 
 Econometric model
-- The original method of decomposing differences in the mean of an outcome variable has been extended to distributional parameters other than the mean (Juhn, Murphy and Pierce (1993) and DiNArdo, Fortin and Lemieux(1996)). 
+- The original method of decomposing differences in the mean of an outcome variable has been extended to distributional parameters other than the mean (Juhn, Murphy and Pierce (1993) and DiNardo, Fortin and Lemieux(1996).   
+
+The heterogeneity of informal employment in developing country shows that it arises from the individual skills of workers in respective sectors, comparatitive advantage from working formally vs informally but also the mechanism inducing workers to work informally (Radchenko, 2016). This raises a question on the suitability of dual market vs integrated market classification, implying that rationing frontiers between two theories are hard to explain. 
 
 
-- As the true selection procedure is unknown, all selection correction models make some assumption about selection itself. 
--  (C. Machado, 2017) 
-- In imputation method, selection on unobservables is assumed away based on observed covariates (Blau , Kahn, 2006, Johnson, Kitamura, 
-Neal, 2000, Neal, 2004, Neal, Johnson, 1996; Olivetti,  Petrongolo, 2008)
+The Oaxaca-Blinder decomposition serves as a foundational method for understanding mean wage differentials between two groups (i.e formal and informal employment), further divided into explained and unexplained effect in the literature. This is consisent with the empirical approach of estimating Mincerian wage equations by least squares methods, which provide estimates of the effect of covariates upon the mean of the conditional wage distribution \parencite{Machado2005}. A significant body of methodological work has been added to the literature aimed at refining and expanding the analysis to include distributional parameters beyond the mean.  \textcite{Machado2005} relies on quantile regressions for each possible quqntile combined with the simulation procedure, \textcite{DiNardo1996} suggest a reweighting procedure to compute distribution of dummy covariates to the aggregate composition effect. In contrast to these path dependent methods, \textcite{Firpo2009} uses the recentered influence function for the distribution statistic of interest in a regression. 
+ 
+ 
+ The decomposition of the overall differences into two components depends on the construction of meaningful counterfactual wage distribution based on the partial equillibrium approah trying to answer the counterfactual question "What wage would a person employed in the informal employment have if s/he was instead employed in a similar job in the formal employment?".  %Counterfactuals used in the decompositions often consist of manipulating structural wage setting function linking the observed and unobserved characteristics of workers to their wages for each group. Since this simple counterfactuals may not be appropriate for answering the economic question of interest, there has been a development of differing methods for estimation of counterfactuals. For instance, the formal employment wage structure may not represent the appropriate counterfactual for the way employees are paid in informal employment in the absence of labor market discrimination.
+  Several alternative methods to construct counterfactual marginal quantile functions were reviewed in \textcite{Fortin2011}. \textcite{DiNardo1996} uses a non-parametric reweighting approach using the propensity score, \textcite{Machado2005} and (Autor, Katz and Kearney, 2005) use conditional quantile regression based estimation procedure, whereas \textcite{Firpo2009} uses a recentered influence function regression approach. In our study, we use  \textcite{Chernozhukov2013}'s distribution regression procedure to derive a couterfactual marginal cumulative distribution which is inverted to provide quantile gap estimates for estimating the semiparametric estimators of conditional distribution.  
 
-- Second approach on selection argues that selection becomes negligible when  participation rates are high. Hence wage gaps can be estimated in smaller sample selected according to observed characteristics abeit different characteristics and employment choices suggest differences on unobserved observations as well.
+Suppose we would like to analyze the wage differences between formal and informal employment. Let $i$ and $f$ denote the population of informal and formal employment respectively. The variable $Y_j$ denotes wages and $X_j$ denotes job-market relevant characteristics that affect the wages for populations $j = i$ and $j = f$. The conditional distribution functions $F_{Y_i|X_i} (y|x)$ and $F_{Y_f|X_f} (y|x)$ describe the stochastic assignment of wages to workers with characteristics $x$, for informal and formal employment respectively.  Let  $F_{Y(i|i)}$ and $F_{Y(f|f)}$ represent the observed distribution of wages for informal and formal employment respectively, and let $F_{Y({f|i})}$ represent the distribution function of wages that have prevailed for informal employment had they faced the formal employment's wage schedule $F_{Y_f|X_f}$ , known as the counterfactual distribution constructed by integrating the conditional distribution of wages for formal employment with respect to the distribution of characteristics for informal employment : 
 
-The third approach of control function, which is known, as in parametric models (Heckman, 1974) or when unknown is estimated by semi-parametric or non parametric methods,  requires an exclusion restriction; an instrument Z that shifts employment but is unrelated to wages. 
+\begin{linenomath*}
+	\begin{align}
+		F_{Y(i|f)} (y)= \int_{X_1} F_{Y_i|X_i}(y|x) \, . dF_{X_f}(x) 
+	\end{align}
+\end{linenomath*} 
 
-The fourth approach of bounding uses restrictions motivated by economic theory to tighten the worst-case scenario on the wage gap. 
-
-%insert related literature and refine to make the flow of four appraoch of selection better
-
+With the understanding that selection could be different for different wage equations in the market, we propose an estimator for subgroup of individuals that doesnot require any prior information about selection based on (Machado, 2018). We divide the group as "always employed", which are individuals who work in formal or informal employment regardeless of instruments.
+ 
+In the literature, four primary approaches address selection concerns in wage gap analyses \parencite{Machado2017}. The first approach utilizes information on observed covariates to impute missing data, assuming that after controlling for detailed characteristics, selection into employment is random. Methods include matching similar individuals and using panel data to fill in missing wages \parencite{Blau2006, Neal2004, Olivetti2016}. The second approach posits that selection bias diminishes when participation rates are high, allowing for estimates from smaller samples with nearly complete participation, although this limits generalizability \parencite{Mulligan2008} , (Chamberlain, 1986). The third approach models the self-selection process by incorporating a control function in the wage equation to account for unobservable factors influencing selection, which often necessitates an exclusion restriction \parencite{Heckman1974}, (Vella, 1998). However, this method's sensitivity to modeling assumptions can affect reliability \parencite{Bar2015} (Melly, 2015). The fourth approach employs economic theory to impose bounds on the worst-case scenario for the wage gap, reducing reliance on unobserved data through instruments that shift participation \parencite{Manski1990, Blundell2007}. While this method imposes fewer restrictions, it often requires additional assumptions to produce informative bounds.
 
 
 
