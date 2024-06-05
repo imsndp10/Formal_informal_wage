@@ -19,7 +19,7 @@ for (i in c(1: length(dat))){
 
 sdat <- lapply(sdat,  function (x) 
 { x %>% 
-    filter(tau%in%c(seq(0.1, 0.9, 0.1)))
+    filter(tau%in%c(0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9))
 })
 
 Split <- NULL
@@ -81,12 +81,12 @@ data1 <- data %>%
 
 table.export <- function(Job = c("Managers", "Elementary_occupations", "Clerical_sales")){
   
-  data <- tableDat(Job)
+  data <- tableDat(Job = "Managers")
   data %>% 
     kable(col.names = c("Year", "tau", "Estimate", "Bounds",
                         "Estimate", "Bounds","Estimate", "Bounds"),
           align = rep("l", length(data)),
-          caption = paste0("Decomposition Table", " ", Job),
+          caption = paste0("Decomposition Table", " ", "Managers"),
           booktabs = T, 
           format = "latex", 
           linesep = "") %>% 
