@@ -102,4 +102,3 @@ managers <- table.export(Job = "Managers")
 elementary <- table.export(Job = "Elementary_occupations") 
 clerical <- table.export(Job = "Clerical_sales") 
 
-
