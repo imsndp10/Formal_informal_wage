@@ -32,7 +32,7 @@ edu_classify <- readxl::read_excel("../../../data/excel/NLFS_II/classification_N
 
 jobs_classification <- readxl::read_excel("../../../data/excel/NLFS_II/classification_NLFS_II.xlsx",
                                           sheet = "jobs_II") %>% 
-  select(c("value", "class_5", "class_11", "class_3"))
+  select(c("value", "two_digit", "class_5", "class_11", "class_3"))
 
 industry_classify <- readxl::read_excel("../../../data/excel/NLFS_II/classification_NLFS_II.xlsx", 
                                         sheet = "industry_II")%>%
@@ -157,7 +157,7 @@ sdat <- employedPop %>%
   select(c("psu", "hhid", "year", "dist", "child_12", "hh_size", "dependent", "dep_ratio",
            "education", "yrs_schooling", "average_yrs", "caste_group_6","tot_chores_hrs",
            "female", "married", "voc_train",
-           "urban", "age", "experience", "experience_sq", "class_5", 
+           "urban", "age", "experience", "experience_sq", "class_5", "class_11", "two_digit",
            "job_sector", "hourly_wage", "workplace", "sz_workplace",
            "overtime_40", "migrated_fr_job", "formal_sector", "formal_employment",
            "weight"))
