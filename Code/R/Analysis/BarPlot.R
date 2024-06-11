@@ -1,0 +1,138 @@
+if(!is.null(dev.list())) dev.off()
+rm(list=ls())
+setwd(dirname(rstudioapi::getSourceEditorContext()$path))
+cat("\014") 
+
+library("tidyverse")
+library("ggplot2")
+library("gridExtra")
+library("grid")
+library("ggpubr")
+
+
+data <- readRDS("../../../Data/Cleaned/Pooled/Pooled.RDS")
+
+data_ <- function(Year, Data){
+  sdat <- Data %>% 
+    filter(year == Year)
+  return(sdat)
+}
+a <- data_(Year = 2008, Data = data)
+
+conf_int <- function(table){
+  a <-DescTools::MultinomCI(table, conf.level = 0.95, method = c("wald"))
+  var <- rownames(a)
+  rownames(a) <- NULL
+  data <- as.data.frame(cbind(var, a))
+  return(data)
+}
+
+###### Plot data prep ####
+### Industry ####
+plotdat <- function(Year, Data, Variable){
+  pdat <- data_(Year, Data)
+  fdat <- subset(pdat, formal_employment == 1)
+  idat <- subset(pdat, formal_employment == 0)
+  f_prop <- table(fdat[,Variable])
+  i_prop <- table(idat[,Variable])
+  formal <- as.data.frame(conf_int(f_prop) %>% mutate(formal = 1))
+  informal <- as.data.frame(conf_int(i_prop) %>%  mutate(formal = 0))
+  final <- rbind(formal,informal) %>% mutate(year = unique(pdat$year)) %>%  
+    mutate(est = as.double(format(round(as.double(est)*100,digits=1),nsmall=1)),
+           lwr.ci = as.double(format(round(as.double(lwr.ci)*100,digits=1),nsmall=1)),
+           upr.ci = as.double(format(round(as.double(upr.ci)*100,digits=1),nsmall=1)))
+  if(Variable == "class_5"){
+    final <- final %>% 
+      mutate(var = factor(var,
+                          levels = c("Elementary_occupations",
+                                     "Plant_operator",
+                                     "Agri_trade",
+                                     "Clerical_sales",
+                                     "Managers")))
+  }
+  if(Variable == "job_sector"){
+    final <- final %>% 
+      mutate(var = factor(var,
+                          levels = c("Mining_utility",
+                                     "Construction",
+                                     "Manufacturing",
+                                     "Market_services",
+                                     "Non_Market_services",
+                                     "Arts_entertain")))
+  }
+  if(Variable == "class_11"){
+    final <- final %>% 
+      mutate(var = factor(var,
+                          levels = c("Armed forces occupations",
+                                     "Elementary_occupations",
+                                     "Plant and machine operators, and assemblers",
+                                     "Plant_operator",
+                                     "Skilled agricultural, forestry and fishery workers",
+                                     "Craft and related trades workers",
+                                     "Service and sales workers",
+                                     "Clerical support workers",
+                                     "Technicians and associate professionals",
+                                     "Professionals",
+                                     "Managers")))
+  }
+  if(Variable == "gdp_sector"){
+    final <- final %>% 
+      mutate(var = factor(var,
+                          levels = c("Mining_utility",
+                                     "Construction",
+                                     "Manufacturing",
+                                     "Trade_repair",
+                                     "Transport_storage",
+                                     "Food_accomodation",
+                                     "Info_communication",
+                                     "Financial_insurance",
+                                     "Real_estate",
+                                     "Professional_scientific_technical",
+                                     "Adminstrative_support_service",
+                                     "Public_admin_defense",
+                                     "Education",
+                                     "Health_social_work",
+                                     "Arts_entertain_other")))
+  }
+  
+  return(final)
+}
+b <- plotdat(Year = 2018, Data = data, Variable = "class_11")
+bar_plotter <- function(Year, Data, Variable, x_lab = "", y_lab = ""){
+  dat <- plotdat(Year,Data,Variable)
+  bar_plot <- ggplot(dat, aes(x = var, 
+                               y = est,
+                               ymin = lwr.ci,
+                               ymax = upr.ci,
+                               fill = as.factor(formal)) ) + 
+    geom_bar (position = position_dodge(), stat = "identity")+
+    geom_errorbar(position = position_dodge(width=0.9), colour="black")+ 
+    labs(
+      x = x_lab,
+      y = y_lab,
+      fill = "Formal") + 
+    theme_bw()+
+    theme(plot.margin = unit(c(0.1,0.2,0.2,0.2), "cm"),
+          panel.grid.major = element_blank(),
+          legend.position = "top",
+          legend.direction = "horizontal",
+          # legend.margin = margin(0,0,0,0),
+          # legend.box.margin = margin(1,0,-10,0),
+          legend.text = element_text(size = 10),
+          text = element_text(size=11, family = "Times New Roman"),
+          axis.text.x = element_text(hjust = 1))+
+          coord_flip()
+return(bar_plot)
+}
+
+c <- bar_plotter(Year = 2018,Data = data,Variable = "gdp_sector",x_lab = "industry",
+                  y_lab = "Count")
+
+d <- bar_plotter(Year = 2008,Data = data,Variable = "gdp_sector",x_lab = "industry",
+                 y_lab = "Count")
+
+e <- bar_plotter(Year = 2008,Data = data,Variable = "job_sector",x_lab = "occupation",
+                 y_lab = "Count")
+f <- bar_plotter(Year = 2018,Data = data,Variable = "class_11",x_lab = "occupation",
+                 y_lab = "Count")
+

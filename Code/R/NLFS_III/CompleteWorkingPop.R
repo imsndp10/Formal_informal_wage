@@ -63,10 +63,10 @@ jobs <- jobs_cls %>%
   mutate(value = as.numeric(value))
 
 industry <- nsic_cls %>% 
-  select(c("value", "job_sector"))
+  select(c("value", "job_sector", "gdp_sector"))
 
 industry_na <- ind_cls %>%
-  select(c("value", "ind"))
+  select(c("value", "ind", "gdp"))
 
 
 {
@@ -114,7 +114,7 @@ workingPop <- wdat%>%
          experience = if_else(experience>0, experience, 0),
          experience_sq = experience*experience,
          female = if_else(sex==1,0,1),#female were coded as two
-         married = case_when(marital==1 ~ "Never_married",
+         marital_status = case_when(marital==1 ~ "Never_married",
                              marital==2 ~ "Married",
                              TRUE ~ "Sep_Div_Wid"),
          urban = if_else(urbrur753==2, 0, 1), 
@@ -124,7 +124,8 @@ workingPop <- wdat%>%
                                     seek30==1 & seektype%in%c(1,3)  ~ "unEmployed",
                                     seek30==2 & jobfixed==1 & seektype%in%c(1,3) ~ "unEmployed",
                                     TRUE ~ "Other")) %>% 
-  filter(Age>=15 & Age <= 65)
+  filter(Age>=15 & Age <= 65) %>% 
+  mutate(married = if_else(marital_status == "Married", 1, 0))
 
 
  employedPop <- workingPop%>%
@@ -132,7 +133,8 @@ workingPop <- wdat%>%
             by = c("mwrk_nsco4" = "value"))%>%
   left_join(., industry, by= c("mwrk_nsic4"="value"))%>%
   left_join(., industry_na, by = c("mwrk_nsco4" = "value"))%>%
-  mutate(job_sector = if_else(is.na(job_sector), ind, job_sector))%>%
+  mutate(job_sector = if_else(is.na(job_sector), ind, job_sector),
+         gdp_sector = if_else(is.na(gdp_sector), gdp, gdp_sector))%>%
   mutate(net_benefits = if_else(is.na(faci_paidval), faci_mktval,
                                 faci_mktval-faci_paidval)/(52*usulhr_mwrk),
          cash_wage = case_when(prd_remu ==1 ~ amt_cashrs/8,
@@ -197,7 +199,7 @@ sdat <- edat%>%
            "education", "yrs_schooling", "average_yrs", "caste_group_6", "tot_chores_hrs",
            "female", "married", "voc_train",
            "urban", "age", "experience", "experience_sq", "class_5", "class_11", "two_digit", 
-           "job_sector", "hourly_wage", "workplace", "sz_workplace",
+           "job_sector", "gdp_sector", "hourly_wage", "workplace", "sz_workplace",
             "overtime_40", "migrated_fr_job", "formal_sector", "formal_employment",
              "weight"))
 labelled::var_label(sdat) <- NULL
