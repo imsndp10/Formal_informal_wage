@@ -16,7 +16,7 @@ sdat <- data %>%
   mutate(log_wage = log(hourly_wage)) %>% 
   filter(year == 2008) %>% 
   group_by(formal_employment) %>% 
-  mutate(quantile = ntile(log_wage, 20)/20) %>%
+  mutate(quantile = ntile(log_wage, 50)/50) %>%
   mutate(mean_Wage = weighted.mean(log_wage, w = weight)) %>% 
   ungroup() %>%
   #filter(quantile >= 0.03 & quantile <=0.97) %>% 

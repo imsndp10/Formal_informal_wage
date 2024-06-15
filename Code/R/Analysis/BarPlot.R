@@ -17,7 +17,7 @@ data_ <- function(Year, Data){
     filter(year == Year)
   return(sdat)
 }
-a <- data_(Year = 2008, Data = data)
+a <- data_(Year = 2018, Data = data)
 
 conf_int <- function(table){
   a <-DescTools::MultinomCI(table, conf.level = 0.95, method = c("wald"))
@@ -30,10 +30,10 @@ conf_int <- function(table){
 ###### Plot data prep ####
 ### Industry ####
 plotdat <- function(Year, Data, Variable){
-  pdat <- data_(Year, Data)
+  pdat <- data_(2008, data)
   fdat <- subset(pdat, formal_employment == 1)
   idat <- subset(pdat, formal_employment == 0)
-  f_prop <- table(fdat[,Variable])
+  f_prop <- table(fdat[,"gdp_sector"])
   i_prop <- table(idat[,Variable])
   formal <- as.data.frame(conf_int(f_prop) %>% mutate(formal = 1))
   informal <- as.data.frame(conf_int(i_prop) %>%  mutate(formal = 0))
@@ -97,8 +97,8 @@ plotdat <- function(Year, Data, Variable){
   
   return(final)
 }
-b <- plotdat(Year = 2018, Data = data, Variable = "class_11")
-bar_plotter <- function(Year, Data, Variable, x_lab = "", y_lab = ""){
+b <- plotdat(Year = 2008, Data = data, Variable = "gdp_sector")
+bar_plotter <- function(Year, Data, Variable, Labels = FALSE){
   dat <- plotdat(Year,Data,Variable)
   bar_plot <- ggplot(dat, aes(x = var, 
                                y = est,
@@ -106,27 +106,54 @@ bar_plotter <- function(Year, Data, Variable, x_lab = "", y_lab = ""){
                                ymax = upr.ci,
                                fill = as.factor(formal)) ) + 
     geom_bar (position = position_dodge(), stat = "identity")+
+    scale_fill_manual(values = c("#466CA6", "#A41D1A"),
+                      labels = c("Informal", "Formal"))+
     geom_errorbar(position = position_dodge(width=0.9), colour="black")+ 
     labs(
-      x = x_lab,
-      y = y_lab,
-      fill = "Formal") + 
+      x = element_blank(),
+      y = element_blank(),
+      fill = "Employment") + 
     theme_bw()+
-    theme(plot.margin = unit(c(0.1,0.2,0.2,0.2), "cm"),
+    theme(#plot.margin = unit(c(0.1,0.2,0.2,0.2), "cm"),
           panel.grid.major = element_blank(),
           legend.position = "top",
           legend.direction = "horizontal",
           # legend.margin = margin(0,0,0,0),
           # legend.box.margin = margin(1,0,-10,0),
           legend.text = element_text(size = 10),
-          text = element_text(size=11, family = "Times New Roman"),
-          axis.text.x = element_text(hjust = 1))+
+          text = element_text(size=11, family = "serif"),
+          axis.text.x = element_text(hjust = 1),
+          axis.title.x=element_blank())+
           coord_flip()
+  if(isFALSE(Labels)){
+    bar_plot <- bar_plot + scale_x_discrete(labels = element_blank())+
+      theme(axis.ticks.y = element_blank())
+  }
+  if(isTRUE(Labels) & Variable == "gdp_sector"){
+    bar_plot <- bar_plot +
+      scale_x_discrete(labels = c("Mining & utility", "Construction", "Manufacturing",
+                                  "Trade & repair", "Transport & storage",
+                                  "Food & accomodation", "Information & communication",
+                                  "Finance & insurance", "Real estate", "Professional services",
+                                  "Administrative & support", "Public administration",
+                                  "Education", "Health & social work", "Arts, entertainment & other"))
+  }
+  if(isTRUE(Labels) & Variable == "class_11"){
+    bar_plot <- bar_plot +
+      scale_x_discrete(labels = c("Armed force", "Elementary", "Plant operator",
+                                                       "Agricultural, forestry & \n fishery", "Crafts & trades",
+                                                       "Service & sales", "Clerical support", "Technicians", "professionals",
+                                                       "Managers"))
+  }
+  grob <- grid::grobTree(grid::textGrob(paste0(Year), x=0.9,  y=0.95,
+                                        gp=grid::gpar(fontsize=8, fontfamily="serif")))
+  bar_plot <- bar_plot + annotation_custom(grob)
 return(bar_plot)
 }
 
-c <- bar_plotter(Year = 2018,Data = data,Variable = "gdp_sector",x_lab = "industry",
-                  y_lab = "Count")
+
+ind_08 <- bar_plotter(Year = 2008,Data = data,Variable = "gdp_sector", Labels = T)
+ind_18 <- bar_plotter(Year = 2018,Data = data,Variable = "gdp_sector", Labels = T)
 
 d <- bar_plotter(Year = 2008,Data = data,Variable = "gdp_sector",x_lab = "industry",
                  y_lab = "Count")
@@ -136,3 +163,10 @@ e <- bar_plotter(Year = 2008,Data = data,Variable = "job_sector",x_lab = "occupa
 f <- bar_plotter(Year = 2018,Data = data,Variable = "class_11",x_lab = "occupation",
                  y_lab = "Count")
 
+ind_final <- ggpubr::ggarrange(ind_08, ind_18, ncol = 2, nrow = 1,
+                       common.legend = TRUE, legend = "top", widths = c(1.8,1))
+
+ggsave(filename = "industry_classification.pdf",plot = ind_final,device = "pdf",width = 14,height = 12,
+       units = c("cm"), dpi = 300, path = "../../../Final Paper/final_paper/images")
+
+  
