@@ -7,14 +7,11 @@ library("tidyverse")
 library("MatchIt")
 library("Counterfactual")
 
-## Year; Gender; Urban-Rural; Industry ### Data subclassification function
-
-
-dataGen <- function(Year, Gender = c("all", "male", "female"), 
+dataGen <- function(Data_, Year, Gender = c("all", "male", "female"), 
                     region = c("all", "urban", "rural"),
                     industry = c("all", "man", "ser", "man_ser"),
                     job = NULL){
-  data <- readRDS("../../../Data/Cleaned/Pooled/Pooled.RDS") %>%
+  data <- Data_ %>%
     mutate(log_wage = log(hourly_wage)) %>% 
     filter(year == Year)
   if(Gender == "male"){
@@ -57,12 +54,13 @@ dataGen <- function(Year, Gender = c("all", "male", "female"),
   return(Data)
 }
 
-CounterFac <- function(Year, Gender = c("all", "male", "female"), 
+CounterFac <- function(Data_,Year, Gender = c("all", "male", "female"), 
                        region = c("all", "urban", "rural"),
                        industry = c("all", "man", "ser", "man_ser"),
                        job = NULL,
-                       formType = c("HH", "JmNoInd", "JmInd", "JmNoIndNoJob"), reg){
-  data <- dataGen(Year, Gender,region,industry, job)
+                       formType = c("HH", "JmNoInd", "JmInd", "JmNoIndNoJob"), reg,
+                       Matched = FALSE){
+  data <- dataGen(Data_,Year, Gender,region,industry, job)
   HH <- as.formula("log_wage ~ yrs_schooling + experience + experience_sq + caste_group_6+
                        married + hh_size + child_12 + tot_chores_hrs")
   HH_female <- update.formula(HH, . ~ . + female)
@@ -104,7 +102,7 @@ CounterFac <- function(Year, Gender = c("all", "male", "female"),
                             printdeco = TRUE,
                             decomposition = TRUE,
                             sepcore = TRUE,
-                            ncore= 11,
+                            ncore= parallel::detectCores()-1,
                             firs)
   estimates <- data.frame(
     duqf_SE = (logitres$resSE)[,1],
@@ -128,62 +126,13 @@ CounterFac <- function(Year, Gender = c("all", "male", "female"),
     file_name <- paste0(Year, "_", "gender_", Gender, "_", "region_", region, "_",
                         "industry_",industry, "_", formType, "_", job[1])
   }
+  if(isFALSE(Matched)){
+  file_name2 <- paste0(file_name, "_Unmatched")
+  }
+  if(isTRUE(Matched)){
+    file_name2 <- paste0(file_name, "_Matched")
+  }
   
-  
-  return(write_rds(x = estimates, file = paste0("../../../Data/Cleaned/Pooled/test2/", file_name, ".RDS"),
+  return(write_rds(x = estimates, file = paste0("../../../Data/Cleaned/Pooled/test2/", file_name2, ".RDS"),
                    compress = "gz"))
 }  
-tictoc::tic()
-d <- CounterFac(Year = 2018,Gender = "all", region = "all", industry = "ser" ,formType = "JmNoIndNoJob",
-                reg = 100)
-tictoc::toc()
-d1 <- CounterFac(Year = 2018,Gender = "all", region = "all", industry = "ser" ,
-                 job = c("Managers"), formType = "JmNoIndNoJob", reg = 100)
-d2 <- CounterFac(Year = 2018,Gender = "all", region = "all", industry = "ser",
-                 job = c("Clerical_sales"), formType = "JmNoIndNoJob",
-                 reg = 100)
-d3 <- CounterFac(Year = 2018,Gender = "all", region = "all", industry = "ser",
-                 job = c("Elementary_occupations", "Plant_operator",
-                         "Agri_trade"),formType = "JmNoIndNoJob",
-                reg = 100)
-
-
-e <- CounterFac(Year = 2018,Gender = "all", region = "all", industry = "all" ,formType = "JmNoIndNoJob",
-                reg = 100)
-e1 <- CounterFac(Year = 2018,Gender = "all", region = "all", industry = "all" ,
-                 job = c("Managers"), formType = "JmNoIndNoJob", reg = 100)
-e2 <- CounterFac(Year = 2018,Gender = "all", region = "all", industry = "all",
-                 job = c("Clerical_sales"), formType = "JmNoIndNoJob",
-                 reg = 100)
-e3 <- CounterFac(Year = 2018,Gender = "all", region = "all", industry = "all",
-                 job = c("Elementary_occupations", "Plant_operator",
-                         "Agri_trade"),formType = "JmNoIndNoJob",
-                 reg = 100)
-
-
-h <- CounterFac(Year = 2008,Gender = "all", region = "all", industry = "ser" ,formType = "JmNoIndNoJob",
-                reg = 100)
-h1 <- CounterFac(Year = 2008,Gender = "all", region = "all", industry = "ser" ,
-                 job = c("Managers"), formType = "JmNoIndNoJob", reg = 100)
-h2 <- CounterFac(Year = 2008,Gender = "all", region = "all", industry = "ser",
-                 job = c("Clerical_sales"), formType = "JmNoIndNoJob",
-                 reg = 100)
-h3 <- CounterFac(Year = 2008,Gender = "all", region = "all", industry = "ser",
-                 job = c("Elementary_occupations", "Plant_operator",
-                         "Agri_trade"),formType = "JmNoIndNoJob",
-                 reg = 100)
-
-tictoc::tic()
-i <- CounterFac(Year = 2008,Gender = "all", region = "all", industry = "all" ,formType = "JmNoIndNoJob",
-                reg = 100)
-tictoc::toc()
-i1 <- CounterFac(Year = 2008,Gender = "all", region = "all", industry = "all" ,
-                 job = c("Managers"), formType = "JmNoIndNoJob", reg = 100)
-i2 <- CounterFac(Year = 2008,Gender = "all", region = "all", industry = "all",
-                 job = c("Clerical_sales"), formType = "JmNoIndNoJob",
-                 reg = 100)
-i3 <- CounterFac(Year = 2008,Gender = "all", region = "all", industry = "all",
-                 job = c("Elementary_occupations", "Plant_operator",
-                         "Agri_trade"),formType = "JmNoIndNoJob",
-                 reg = 100)
-

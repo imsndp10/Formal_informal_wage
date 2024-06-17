@@ -1,7 +1,13 @@
-library(dplyr)
-library(MatchIt)
-library(cobalt)
-library(ggplot2)
+if(!is.null(dev.list())) dev.off()
+rm(list=ls())
+setwd(dirname(rstudioapi::getSourceEditorContext()$path))
+cat("\014") 
+
+
+library("dplyr")
+library("MatchIt")
+library("cobalt")
+library("ggplot2")
 library("tidyverse")
 
 # Function to generate data for a specific year
@@ -13,6 +19,7 @@ generateYearlyData <- function(data, Year) {
 performMatching <- function(data, formula) {
   matchit_obj <- matchit(as.formula(formula),
                          data = data,
+                         s.weights = data$weight,
                          method = "full",
                          exact = "year",
                          distance = "mahalanobis")
@@ -48,11 +55,11 @@ performMatching <- function(data, formula) {
           panel.background = element_rect(fill = 'white'),
           panel.grid = element_line(colour = "#e1e5ea"))
   
-  list(matched_data = matchedData, 
+  return(list(matched_data = matchedData, 
        summary = match_summary, 
        balance_plot = balance_plot, 
        balance_table = balance_table, 
-       love_plot = love_plot)
+       love_plot = love_plot))
 }
 
 # Main function to handle the entire process for two years
@@ -90,14 +97,20 @@ balance_plot_2018 <- matched_results$year2018_results$balance_plot
 balance_table_2018 <- matched_results$year2018_results$balance_table
 love_plot_2018 <- matched_results$year2018_results$love_plot
 
+matched <- rbind(matched_data_2008, matched_data_2018)
+
+write_rds(matched, file = "../../../Data/Cleaned/Pooled/Merged_Matched.RDS", compress = "gz")
+
+
+
 #Save Matched data in RDS and DTA for 2008
-write_rds(matched_data_2008, file = "../../../Data/Cleaned/Pooled/Matched08.RDS", compress = "gz")
-
-# Save the object in DTA format
-#The object is not saved for stata files for both 08 and 18
-haven::write_dta(matched_data_2008, "../../../Data/Cleaned/Pooled/Matched08.dta")
-
-#Save Matched data in RDS and DTA for 2018
-write_rds(matched_data_2018, file = "../../../Data/Cleaned/Pooled/Matched18.RDS", compress = "gz")
-
-haven::write_dta(matched_data_2018, "../../../Data/Cleaned/Pooled/Matched18.dta")
+# write_rds(matched_data_2008, file = "../../../Data/Cleaned/Pooled/Matched08.RDS", compress = "gz")
+# 
+# # Save the object in DTA format
+# #The object is not saved for stata files for both 08 and 18
+# #haven::write_dta(matched_data_2008, "../../../Data/Cleaned/Pooled/Matched08.dta")
+# 
+# #Save Matched data in RDS and DTA for 2018
+# write_rds(matched_data_2018, file = "../../../Data/Cleaned/Pooled/Matched18.RDS", compress = "gz")
+# 
+#haven::write_dta(matched_data_2018, "../../../Data/Cleaned/Pooled/Matched18.dta")
