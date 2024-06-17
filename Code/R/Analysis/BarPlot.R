@@ -30,10 +30,10 @@ conf_int <- function(table){
 ###### Plot data prep ####
 ### Industry ####
 plotdat <- function(Year, Data, Variable){
-  pdat <- data_(2008, data)
+  pdat <- data_(Year, Data)
   fdat <- subset(pdat, formal_employment == 1)
   idat <- subset(pdat, formal_employment == 0)
-  f_prop <- table(fdat[,"gdp_sector"])
+  f_prop <- table(fdat[,Variable])
   i_prop <- table(idat[,Variable])
   formal <- as.data.frame(conf_int(f_prop) %>% mutate(formal = 1))
   informal <- as.data.frame(conf_int(i_prop) %>%  mutate(formal = 0))
@@ -124,6 +124,8 @@ bar_plotter <- function(Year, Data, Variable, Labels = FALSE){
           text = element_text(size=11, family = "serif"),
           axis.text.x = element_text(hjust = 1),
           axis.title.x=element_blank())+
+    scale_y_continuous(breaks = 10)+
+    ylim(0,50)+
           coord_flip()
   if(isFALSE(Labels)){
     bar_plot <- bar_plot + scale_x_discrete(labels = element_blank())+
@@ -153,15 +155,11 @@ return(bar_plot)
 
 
 ind_08 <- bar_plotter(Year = 2008,Data = data,Variable = "gdp_sector", Labels = T)
-ind_18 <- bar_plotter(Year = 2018,Data = data,Variable = "gdp_sector", Labels = T)
+ind_18 <- bar_plotter(Year = 2018,Data = data,Variable = "gdp_sector", Labels = F)
 
-d <- bar_plotter(Year = 2008,Data = data,Variable = "gdp_sector",x_lab = "industry",
-                 y_lab = "Count")
+occu_08 <- bar_plotter(Year = 2008,Data = data,Variable = "class_11", Labels = T)
 
-e <- bar_plotter(Year = 2008,Data = data,Variable = "job_sector",x_lab = "occupation",
-                 y_lab = "Count")
-f <- bar_plotter(Year = 2018,Data = data,Variable = "class_11",x_lab = "occupation",
-                 y_lab = "Count")
+occu_18 <- bar_plotter(Year = 2018,Data = data,Variable = "class_11",Labels = F)
 
 ind_final <- ggpubr::ggarrange(ind_08, ind_18, ncol = 2, nrow = 1,
                        common.legend = TRUE, legend = "top", widths = c(1.8,1))
@@ -170,3 +168,7 @@ ggsave(filename = "industry_classification.pdf",plot = ind_final,device = "pdf",
        units = c("cm"), dpi = 300, path = "../../../Final Paper/final_paper/images")
 
   
+occu_final <- ggpubr::ggarrange(occu_08, occu_18, ncol = 2, nrow = 1,
+                               common.legend = TRUE, legend = "top", widths = c(1.8,1))
+ggsave(filename = "occupation_classification.pdf",plot = occu_final,device = "pdf",width = 14,height = 12,
+       units = c("cm"), dpi = 300, path = "../../../Final Paper/final_paper/images")
