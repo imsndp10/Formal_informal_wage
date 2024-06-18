@@ -169,6 +169,6 @@ ggsave(filename = "industry_classification.pdf",plot = ind_final,device = "pdf",
 
   
 occu_final <- ggpubr::ggarrange(occu_08, occu_18, ncol = 2, nrow = 1,
-                               common.legend = TRUE, legend = "top", widths = c(1.8,1))
+                               common.legend = TRUE, legend = "top", widths = c(1.6,1))
 ggsave(filename = "occupation_classification.pdf",plot = occu_final,device = "pdf",width = 14,height = 12,
        units = c("cm"), dpi = 300, path = "../../../Final Paper/final_paper/images")
