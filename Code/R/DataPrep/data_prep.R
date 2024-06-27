@@ -50,7 +50,13 @@ merged2 <- fastDummies::dummy_cols(merged, remove_first_dummy = FALSE)
 
 write_rds(merged2, file = "../../../Data/Cleaned/Pooled/Pooled.RDS", compress = "gz")
 
+
+#filtering gdp_sector and class_11 out for stata
+
+merged3 <- merged %>%
+  select(-class_11, -gdp_sector) %>%
+  fastDummies::dummy_cols(remove_first_dummy = FALSE)
 # Save the object in DTA format
-write_dta(merged2, "../../../Data/Cleaned/Pooled/Pooled.dta")
+write_dta(merged3, "../../../Data/Cleaned/Pooled/Pooled.dta")
 
 

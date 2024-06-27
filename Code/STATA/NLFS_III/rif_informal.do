@@ -1,0 +1,20 @@
+clear
+set more off
+cd "/Users/sandeepsharma/Desktop/Research/Data Analysis/Formal informal wage/Formal_informal_wage/Data/Cleaned/Pooled"
+//cd "D:/Work/Sandeep_research/Data/Cleaned/Pooled"
+use Pooled.dta
+gen ln_wage = ln(hourly_wage)
+label define formal_employment 0 "Informal Employment" 1 "Formal Employment"
+
+global exp "experience experience_sq"
+global education "education_Below_primary education_Primary education_Tenth_grade education_Secondary education_Bachelor education_Masters_above" 
+global caste "caste_group_6_Janajati caste_group_6_Adhibasi caste_group_6_Madhesi caste_group_6_Dalit caste_group_6_Others"
+global gdp_sector "gdp_sector_Administrative_support_service gdp_sector_Arts_entertainment_other gdp_sector_Construction gdp_sector_Education gdp_sector_Financial_insurance gdp_sector_Food_accommodation gdp_sector_Health_social_work gdp_sector_Info_communication gdp_sector_Manufacturing gdp_sector_Mining_utility gdp_sector_Professional_scientific_technical gdp_sector_Public_admin_defense gdp_sector_Real_estate gdp_sector_Trade_repair gdp_sector_Transport_storage"
+
+rifhdreg ln_wage formal_employment education_Below_primary education_Primary education_Tenth_grade education_Secondary education_Bachelor education_Masters_above female hh_size caste_group_6_Janajati caste_group_6_Adhibasi caste_group_6_Madhesi caste_group_6_Dalit caste_group_6_Others married child_12 voc_train migrated_fr_job tot_chores_hrs urban overtime_40, rif(lor(20)) scale(100) robust
+
+rifsureg ln_wage formal_employment education_Below_primary education_Primary education_Tenth_grade education_Secondary education_Bachelor education_Masters_above female hh_size caste_group_6_Janajati caste_group_6_Adhibasi caste_group_6_Madhesi caste_group_6_Dalit caste_group_6_Others married child_12 voc_train migrated_fr_job tot_chores_hrs urban overtime_40, qs(10(10)90)
+
+oaxaca_rif ln_wage education_Below_primary education_Primary education_Tenth_grade education_Secondary education_Bachelor education_Masters_above female hh_size caste_group_6_Janajati caste_group_6_Adhibasi caste_group_6_Madhesi caste_group_6_Dalit caste_group_6_Others married child_12 voc_train migrated_fr_job tot_chores_hrs urban overtime_40, by(formal_employment) wgt(1) rif(q(90)) rwlogit(education_Below_primary education_Primary education_Tenth_grade education_Secondary education_Bachelor education_Masters_above female hh_size caste_group_6_Janajati caste_group_6_Adhibasi caste_group_6_Madhesi caste_group_6_Dalit caste_group_6_Others married child_12 voc_train migrated_fr_job tot_chores_hrs urban overtime_40)
+
+oaxaca_rif $exp $education $caste hh_size female married child_12 voc_train migrated_fr_job tot_chores_hrs urban overtime_40, by(formal_employment) wgt(1) rif(q(90))
