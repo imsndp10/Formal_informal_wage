@@ -6,15 +6,53 @@ use Pooled.dta
 gen ln_wage = ln(hourly_wage)
 label define formal_employment 0 "Informal Employment" 1 "Formal Employment"
 
+sort psu hhid year
+by psu hhid year: egen total_formal = total(formal_employment)
+gen HH_formal = total_formal - formal_employment
+
+
 global exp "experience experience_sq"
 global education "education_Below_primary education_Primary education_Tenth_grade education_Secondary education_Bachelor education_Masters_above" 
 global caste "caste_group_6_Janajati caste_group_6_Adhibasi caste_group_6_Madhesi caste_group_6_Dalit caste_group_6_Others"
-global gdp_sector "gdp_sector_Administrative_support_service gdp_sector_Arts_entertainment_other gdp_sector_Construction gdp_sector_Education gdp_sector_Financial_insurance gdp_sector_Food_accommodation gdp_sector_Health_social_work gdp_sector_Info_communication gdp_sector_Manufacturing gdp_sector_Mining_utility gdp_sector_Professional_scientific_technical gdp_sector_Public_admin_defense gdp_sector_Real_estate gdp_sector_Trade_repair gdp_sector_Transport_storage"
 
-rifhdreg ln_wage formal_employment education_Below_primary education_Primary education_Tenth_grade education_Secondary education_Bachelor education_Masters_above female hh_size caste_group_6_Janajati caste_group_6_Adhibasi caste_group_6_Madhesi caste_group_6_Dalit caste_group_6_Others married child_12 voc_train migrated_fr_job tot_chores_hrs urban overtime_40, rif(lor(20)) scale(100) robust
+local quantiles = "5 95"
 
-rifsureg ln_wage formal_employment education_Below_primary education_Primary education_Tenth_grade education_Secondary education_Bachelor education_Masters_above female hh_size caste_group_6_Janajati caste_group_6_Adhibasi caste_group_6_Madhesi caste_group_6_Dalit caste_group_6_Others married child_12 voc_train migrated_fr_job tot_chores_hrs urban overtime_40, qs(10(10)90)
+//rif(q(`q'))
+//foreach q of local quantiles {
+//asdoc oaxaca_rif ln_wage $exp $education $caste hh_size female ///
+//married child_12 voc_train migrated_fr_job tot_chores_hrs urban overtime_40 ///
+//$class_5 if year == 2008 , by(formal_employment) wgt(1) rif(q(`q')) rwlogit(HH_formal dep_ratio $exp $education $caste) swap save(asdoc.xlsx)
+//}
 
-oaxaca_rif ln_wage education_Below_primary education_Primary education_Tenth_grade education_Secondary education_Bachelor education_Masters_above female hh_size caste_group_6_Janajati caste_group_6_Adhibasi caste_group_6_Madhesi caste_group_6_Dalit caste_group_6_Others married child_12 voc_train migrated_fr_job tot_chores_hrs urban overtime_40, by(formal_employment) wgt(1) rif(q(90)) rwlogit(education_Below_primary education_Primary education_Tenth_grade education_Secondary education_Bachelor education_Masters_above female hh_size caste_group_6_Janajati caste_group_6_Adhibasi caste_group_6_Madhesi caste_group_6_Dalit caste_group_6_Others married child_12 voc_train migrated_fr_job tot_chores_hrs urban overtime_40)
+//esttab using "results_quantile_15.csv", replace se
 
-oaxaca_rif $exp $education $caste hh_size female married child_12 voc_train migrated_fr_job tot_chores_hrs urban overtime_40, by(formal_employment) wgt(1) rif(q(90))
+* Initialize an empty local macro
+local quantiles ""
+
+* Loop through even numbers from 2 to 100 and add them to the local macro
+forvalues i = 2(2)100 {
+    local quantiles "`quantiles' `i'"
+}
+
+* Display the local macro to verify (optional)
+di "`quantiles'"
+
+* Loop through quantiles and perform Oaxaca-RIF decomposition
+foreach q of local quantiles {
+    * Perform Oaxaca-RIF decomposition and save results using asdoc
+    asdoc oaxaca_rif ln_wage $exp $education $caste hh_size female ///
+    married child_12 voc_train migrated_fr_job tot_chores_hrs urban overtime_40 ///
+    $class_5 if year == 2008 , by(formal_employment) wgt(1) rif(q(`q')) rwlogit(HH_formal dep_ratio $exp $education $caste) swap ///
+    save(asdoc.doc)
+}
+
+//Loop save trial
+
+foreach q of local quantiles {
+    * Perform Oaxaca-RIF decomposition and save results using asdoc
+oaxaca_rif ln_wage $exp $education $caste hh_size female ///
+married child_12 voc_train migrated_fr_job tot_chores_hrs urban overtime_40 ///
+$class_5 if year == 2008, by(formal_employment) wgt(1) rif(q(`q')) rwlogit(HH_formal dep_ratio $exp $education $caste) swap
+putexcel set test2.xlsx, sheet(xyz) modify
+	putexcel A1 = matrix(r(table)')
+	}
