@@ -12,6 +12,7 @@ library(grid)
 # Define your function to process the data
 process_data <- function(file_path, sheet_name, year_label, group_name) {
   read_xlsx(file_path, sheet = sheet_name) %>%
+    filter(as.numeric(qnt) >= 3 & as.numeric(qnt) <= 97) %>%
     mutate(qnt = as.numeric(qnt) / 100) %>%
     mutate(year_label = year_label, group_name = group_name) %>%
     filter(group %in% c("group_1", "group_2", "group_c", "tdifference", "t_explained", "t_unexplained")) %>%
@@ -21,9 +22,9 @@ process_data <- function(file_path, sheet_name, year_label, group_name) {
 # Function to create plot
 create_plot <- function(data) {
   ggplot(data) +
-    geom_line(aes(x = tau, y = coefficient, color = group), linewidth = 0.6) +
+    geom_line(aes(x = tau, y = coefficient, color = group), linewidth = 0.3) +
     geom_ribbon(aes(x = tau, ymin = lower, ymax = upper, fill = group),
-                linetype = 3, alpha = 0.3, show.legend = FALSE) +
+                linetype = 3, alpha = 0.1, show.legend = FALSE) +
     scale_color_manual(values = c(
       "group_1" = "#1f77b4", 
       "group_2" = "#ff7f0e", 
@@ -58,27 +59,30 @@ create_plot <- function(data) {
 }
 
 # Process your data
-a <- process_data("../../../data/Cleaned/Pooled/female_2008.xlsx", "xyz", "2008", "Female")
-b <- process_data("../../../data/Cleaned/Pooled/female_2018.xlsx", "xyz", "2018", "Female")
-c <- process_data("../../../data/Cleaned/Pooled/male_08.xlsx", "xyz", "2008", "Male")
-d <- process_data("../../../data/Cleaned/Pooled/male_18.xlsx", "xyz", "2018", "Male")
+a <- process_data("../../../data/Cleaned/Pooled/elem_08.xlsx", "xyz", "2008", "Elementary")
+b <- process_data("../../../data/Cleaned/Pooled/elem_18.xlsx", "xyz", "2018", "Elementary")
+c <- process_data("../../../data/Cleaned/Pooled/clerical_08.xlsx", "xyz", "2008", "Clerical")
+d <- process_data("../../../data/Cleaned/Pooled/clerical_18.xlsx", "xyz", "2018", "Clerical")
+e <- process_data("../../../data/Cleaned/Pooled/managers_08.xlsx", "xyz", "2008", "Managers")
+f <- process_data("../../../data/Cleaned/Pooled/managers_18.xlsx", "xyz", "2018", "Managers")
+j <- process_data("../../../data/Cleaned/Pooled/overall_08.xlsx", "xyz", "2008", "Overall")
+k <- process_data("../../../data/Cleaned/Pooled/overall_18.xlsx", "xyz", "2018", "Overall")
 
+
+ab <- rbind(a, b, c, d, e, f, j, k)
 # Create plots
-e <- create_plot(a)
-f <- create_plot(b)
-g <- create_plot(c)
-h <- create_plot(d)
+g <- create_plot(ab)
+
 
 # Arrange the plots
-i <- ggpubr::ggarrange(e, f, g, h, ncol = 2, nrow = 2,
-                                   common.legend = TRUE, legend = "top")
+h <- ggpubr::ggarrange(g, common.legend = TRUE, legend = "top")
 
 # Annotate the combined plot
-j <- ggpubr::annotate_figure(i,
+i <- ggpubr::annotate_figure(h,
                              left = grid::textGrob("Normalized earnings", rot = 90, gp = grid::gpar(fontfamily = "serif", fontsize = 10)), 
                              bottom = grid::textGrob("Quantile", gp = grid::gpar(fontfamily = "serif", fontsize = 10)))
 
 
 # Save the plot
-#ggsave(filename = "normalized_earnings.pdf", plot = final_plot, device = "pdf", width = 14, height = 12, units = "cm", path = "../../../Final Paper/final_paper/images")
+ggsave(filename = "overall_rif_decompose.pdf", plot = i, device = "pdf", width = 14, height = 18, units = "cm", path = "../../../Final Paper/final_paper/images")
 
