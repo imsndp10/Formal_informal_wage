@@ -11,97 +11,27 @@ The parametric approach to selection correction is bolder; it aims to explicitly
 
 In the spirit of \textcite{Buchinsky1998}, we correct for selection vi\'{a} parametric approach in  the quantile framework. However, we use \textcite{Arellano2017}'s copula based technique to model the joint-distribution of error terms in outcome and selection models. This approach overcomes \textcite{Huber2015}'s  critique concerning the conditional independence assumption in sample selection models, particularly its implication of identical slopes across all quantile regressions. With additional restrictions compared to the bounding approach, our methodology provides more tighter bounds and greater flexibility in capturing the direction of sample selection from the observed data, rather than relying solely on theoretical priors.\par
 
-\subsection{OLS regression and the Blinder-Oaxaca decomposition} \label{subsec:decomposition}
-The analysis is based on a Mincerian earnings function, which is modelled by \textcite{Blinder1973, Oaxaca1973} and includes experience (as a proxy for the job training), its square, education and other variables that are associated with individuals’ earnings. This model is specified for the formal and the informal sector as follows:
-\begin{linenomath*}
-	\begin{align}
-	ln w_i^{FE} &= x_i^{FE}\beta + \epsilon_i^{FE}, \\
-	ln w_i^{IE} &= x_i^{IE}\beta + \epsilon_i^{IE}
-\end{align}
- \end{linenomath*} 
-where $i = \{1, ... , N\}$ denotes individuals and $\ln w_i^{FE}$ and $\ln w_i^{IE}$ refer to the log of the hourly wage of the individual $i$ in the formal and the informal sectors, respectively. $x_i^{FE}$ and $x_i^{IE}$ represent individual characteristics such as education, experience, gender, location, etc. The estimated earning equations for formal and informal workers, $\ln w_i^{FE} = x_i^{FE}\beta + \epsilon_i^{FE}$ and $\ln w_i^{IE} = x_i^{IE}\beta + \epsilon_i^{IE}$, are used to calculate the difference in wages between the formal sector and the informal sector.
 
-First, taking the gross wage differential (denoted as $W$) between the Formal employment ($FE$) and the informal employment ($IE$) groups is the difference in the predicted logarithmic daily wages of the two groups (the higher wage group: FE; and the lower wage group: IE).
-\begin{linenomath*}\begin{align}
-	W = E(Y_{FE}) - E(Y_{IE})
-\end{align}\end{linenomath*}
-where $E(Y)$ denotes the expected value of the outcome variable, is accounted for by group diﬀerences in the predictors. \par
+\subsection{RIF-regression}
+The influence function (IF) is defined as IF($y; v$), the influence function corresponding to an observed wage $y$ for the distributional statistic of interest, $v(F_Y)$. The recentered influence function (RIF) is defined as RIF($y; v$) = $v(F_Y) + \text{IF}(y; v)$, so that it aggregates back to the statistics of interest ($\mathbb{E}[\text{RIF}(y; v)] = v(F_Y)$). In its simplest form, the approach assumes that the conditional expectation of the RIF($y; v$) can be modeled as a linear function of the explanatory variables,
 
-Based on the linear model where $X$ is a vector containing the predictors and a constant, β contains the slope parameters and the intercept, and $\epsilon$ is the error, the mean outcome difference can be expressed as the difference in the linear prediction at the group-speciﬁc means of the regressors. That is:
-\begin{linenomath*}
-	\begin{align}
-	W = E(Y_{FE}) - E(Y_{IE}) = {\left(E(X_{FE})\right)}^{\prime} \beta_{FE} - {\left(E(X_{IE})\right)}^{\prime} \beta_{IE}
-\end{align}
-\end{linenomath*}
-because
-\begin{linenomath*}
-	\begin{equation}
-		E(Y_{l}) = E(X_{l}^{\prime} \beta_{l} + \epsilon_{l}) = E(X_{l}^{\prime} \beta_{l}) + E(\epsilon_{l}) = E(X_{l}^{\prime} \beta_{l})
-		\label{eqn:sandy}
-	\end{equation}
-\end{linenomath*}
- where $E(\beta_{l}) = \beta_{l}$ and $E(\epsilon_{l}) = 0$ by assumption.
+\begin{equation}
+	\mathbb{E}[\text{RIF}(Y; v)|X] = X \gamma + \epsilon,
+\end{equation}
 
-To identify the contribution of group differences in predictors to the overall outcome difference, equation~\vref{eqn:sandy} can be rearranged, for example, as follows:
-\begin{linenomath*}
-	\begin{equation}
-		\begin{split}
-			W &= {\left(E(X_{FE}) - E(X_{IE})\right)}^{\prime} \beta_{IE} + {\left(E(X_{IE})\right)}^{\prime} (\beta_{FE} - \beta_{IE}) \\
-			&\quad + {\left(E(X_{FE}) - E(X_{IE})\right)}^{\prime} {\left(\beta_{FE} - \beta_{IE}\right)}
-		\end{split}
-	\end{equation}
-\end{linenomath*}
+where the parameters $\gamma$ can be estimated by OLS.
 
-This is a “threefold” decomposition; that is, the outcome difference is divided into three components:
-\begin{align}
-	W = E + C + I   
-	\label{eqn:threecomponent}
-\end{align}
+In the case of quantiles, the influence function IF($Y, Q_\tau$) is given by $(\tau - \mathbb{I}\{Y \leq Q_\tau\}) / f_Y(Q_\tau)$, where $\mathbb{I}\{\cdot\}$ is an indicator function, $f_Y(\cdot)$ is the density of the marginal distribution of $Y$, and $Q_\tau$ is the population $\tau$-quantile of the unconditional distribution of $Y$. As a result, RIF($Y; Q_\tau$) is equal to $Q_\tau + \text{IF}(Y, Q_\tau)$, and can be rewritten as
 
-The first component in equation \vref{eqn:threecomponent},
-$E = {\left(E(X_{FE}) - E(X_{IE})\right)}^{\prime} \beta_{IE}$
-amounts to the part of differential that is due to group dfferences in the predictors (“endowments effect”). 
+\begin{equation}
+	\text{RIF}(Y; Q_\tau) = Q_\tau + \frac{\tau - \mathbb{I}\{Y \leq Q_\tau\}}{f_Y(Q_\tau)} = c_{1,\tau} \cdot \mathbb{I}\{Y > Q_\tau\} + c_{2,\tau},
+\end{equation}
 
-The second component in  equation \vref{eqn:threecomponent}, $C = {\left(E(X_{IE})\right)}^{\prime} (\beta_{FE} - \beta_{IE})$ measures the contribution of diﬀerences in the coeﬃcients (including diﬀerences in the intercept). \par 
+where $c_{1,\tau} = \frac{1}{f_Y(Q_\tau)}$ and $c_{2,\tau} = Q_\tau - c_{1,\tau} \cdot (1 - \tau)$. Except for the constants $c_{1,\tau}$ and $c_{2,\tau}$, the RIF for a quantile is simply an indicator variable $\mathbb{I}\{Y \leq Q_\tau\}$ for whether the outcome variable is smaller or equal to the quantile $Q_\tau$. Using the terminology introduced above, running a linear regression of $\mathbb{I}\{Y \leq Q_\tau\}$ on $X$ is a distributional regression estimated at $y = Q_\tau$, using the influence function of the linear probability model.
 
-The third component in  equation \vref{eqn:threecomponent}, $I = {\left(E(X_{FE}) - E(X_{IE})\right)}^{\prime} {\left(\beta_{FE} - \beta_{IE}\right)}$ is an interaction term accounting for the fact that diﬀerences in endowments and coefﬁcients exist simultaneously between the two groups. \par
+There is, thus, a close connection between RIF regressions and the distributional regressional methods of 
 
-The decomposition shown in equation  is formulated from the viewpoint of group IE. That is, the group differences in the predictors are weighted by the coefficients of group IE to determine the endowments effect (E). The E component measures the expected change in group IE’s mean outcome if group IE had group FE’s predictor levels. Similarly, for the C component (coefficients effect), the differences in coefficients are weighted by group IE’s predictor levels. That is, the C component measures the expected change in group IE’s mean outcome if group IE had FE’s coeﬃcients. \par
-
-\subsection{Recentered Influence Function}
-
-\subsubsection{Influence Function}
-If the sample/population is finite of size \(n\), it can be referred to as \(Y = \{y_1, y_2, \ldots, y_n\}\), where each \(y_i\) is the outcome of interest (i.e., income) of the \(i\)-th person. Using the function \(F_Y\) to refer to the cdf and \(f_Y\) to the pdf, the vector of information required for analyzing distributions can be more briefly written as a set of ordered pairs,
-\[ 
-F_Y = \{ (y, F_Y(y)) \} \in \mathbb{R} \text{ or } f_Y = \{ (y, f_Y(y)) \} \in \mathbb{R}, 
-\]
-where \(y\) represents any real number (generally positive when referring to income). This simply means that if one has access to any of these vectors of information \((Y, F_Y, f_Y)\), any distributional statistic can be derived.
-
-Let us call the \( \nu(\cdot) \) a functional that uses all the information contained in \(Y, F_Y\), or \(f_Y\) to estimate a distributional statistic of \(Y\). To measure the impact a change in the distribution of income will have on the distributional statistic, one can simply compare the indices swapping the cdf from the observed distribution \(F_Y\) to the ex post distribution \(G_Y\). This can be written as follows:
-\[
-\Delta \nu = \nu(G_Y) - \nu(F_Y)
-\]
-Thus, \(\Delta \nu\) is the change in the distributional statistic generated by a change in distribution from \(F_Y \rightarrow G_Y\). This change can be as simple as having a new person (with random income) added to the sample, changing the rankings of everyone in the sample. This scenario is an exercise that can be used for understanding the definition of IFs and RIFs.
-
-For a population of size \(N\), changes to the distribution caused by one additional person will be larger compared to the same experiment with a population of size \(2N\). A solution is to standardize the change in the statistic \(\Delta \nu\) with respect to some measure that quantifies the change of the distribution (\(\Delta (G_Y - F_Y)\)):
-\[
-\Delta^s \nu = \frac{\Delta \nu}{\Delta (G_Y - F_Y)} = \frac{\nu(G_Y) - \nu(F_Y)}{\Delta(G_Y - F_Y)}
-\]
-This process can be extended to measure \(\Delta^s \nu\) for an infinitesimally small change in the distribution function from \(F_Y \rightarrow G_Y\). This idea is what lies behind the Gâteaux derivative, a generalization of the directional derivative for functional analysis. The derivative is used to construct IFs, which can be used as measures of robustness of functionals to data outliers (Hampel 1974) and facilitate the visualization of the structure of the distributional statistic as a function of the available data. 
-
-We can construct the distribution that would be observed in \(G_Y\), combining the observed distribution from \(F_Y\) and \(H_{y_c}\):
-\[
-G_Y = (1 - \epsilon)F_Y + \epsilon H_{y_c}
-\]
-In other words, \(G_Y\) is the resulting distribution when the original distribution \(F_Y\) is transformed in the direction of \(H_{y_c}\). This expression also quantifies the change in the distribution when moving from \(F_Y \rightarrow G_Y\) as \(\epsilon\). With this concept in place, we can finally provide the formal definition of the IF:
-\[
-IF(y_c; \nu(F_Y)) \equiv \lim_{\epsilon \rightarrow 0} \frac{\nu((1 - \epsilon)F_Y + \epsilon H_{y_c}) - \nu(F_Y)}{\epsilon} = \frac{\partial \nu(F_Y + \epsilon H_{y_c})}{\partial \epsilon}
-\]
-The IF is a directional derivative that shows how the distributional statistic \(\nu\) would change when there is a small change in the distribution \(F_Y\) that gives more weight to observations with values \(y_c\).
-
-\subsection{RIF-OLS and RIF-Decomposition}
-
-Firpo, Fortin, and Lemieux (2009) introduced the use of a specific type of IF, known as recentered influence functions (RIFs), useful for analyzing how changes in the distribution of explanatory variables (X) impact the unconditional distribution of the outcome variable (Y). {Rios-Avila2020stata}
+Consider Firpo, Fortin, and Lemieux (2009) introduced the use of a specific type of IF, known as recentered influence functions (RIFs), useful for analyzing how changes in the distribution of explanatory variables (X) impact the unconditional distribution of the outcome variable (Y). {Rios-Avila2020stata}
 \[
 RIF(y; \nu, F_Y) = \nu(F_Y) + IF(y; \nu, F_Y)
 \]
