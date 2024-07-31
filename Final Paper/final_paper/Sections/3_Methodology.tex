@@ -80,18 +80,25 @@ where $Y$ is the natural logarithm of hourly earnings and $X$ is a vector of $K$
 
 UQRs estimate the effect of covariates on all parts of the earnings distribution and are thus particularly interesting for policy implications or evaluation. CQRs do not allow to draw conclusions about the impact of a variable on the overall earnings distribution but rather provide insights about the dispersion of earnings within different subgroups of the target population {Borah and Basu, 2013}.
 
-Building on the estimation of unconditional quantile regression and partial effects of explanatory variables on any unconditional quantile of the dependent variable, we finally apply the RIF generalization of the Oaxaca-Blinder decomposition for analyzing the differences of outcome distributions across groups. The model decomposes observed wage earnings differences between formal and informal employment into composition effect $(\delta^\tau_c)$ and wage structure effect $(\delta^\tau_q)$. However, this reweighting generates a specification error and a reweighting error. We decompose the wage inequality as : 
+Building on the estimation of unconditional quantile regression and partial effects of explanatory variables on any unconditional quantile of the dependent variable, we finally apply the RIF generalization of the Oaxaca-Blinder decomposition for analyzing the differences of outcome distributions across groups. Given the assumptions that the mean of the RIF-function is equal to the actual quantile, as well as the mean of the conditional expectation given \( X \) shown in equation \ref{eqn:} , we have:
 
 \begin{linenomath*}
 	\begin{equation}
-		(\delta^\tau) = (\delta^\tau_c) + (\delta^\tau_w)
+		E[RIF(Y_{FE}; Q_\tau)|X_{FE}] - E[RIF(Y_{IE}; Q_\tau)|X_{IE}] = X_{FE} \beta_{FE}^\tau - X_{IE} \beta_{IE}^\tau = \Delta_\tau
 	\end{equation}
 \end{linenomath*}
 
-where:
+where \(\Delta_\tau\) is the wage gap at the \(\tau\)th quantile and \( FE \) and \( IE \) represent formal and informal employment, respectively.
+
+The wage gap is, as in the standard two-fold Oaxaca-Blinder decomposition, decomposed into an endowments (explained) and a coefficients (unexplained) component. The decomposition has the following form:
 
 \begin{linenomath*}
 	\begin{equation}
-		(\delta^\tau_c) = (\delta^\tau_c, pure) + (S_error) = 
+		\Delta_\tau = \Delta_\tau^E + \Delta_\tau^C = (X_{FE}- X_{IE})\beta_{IE}^\tau + X_{FE}(\beta_{FE}^\tau - \beta_{IE}^\tau)
 	\end{equation}
 \end{linenomath*}
+
+where the index \( E \) indicates the Endowments Effect and the index \( C \) the Coefficients Effect.
+
+To perform a detailed decomposition, the contribution of each element of the vector of explanatory variables \( X \) on both components is estimated. For identification, a detailed decomposition underlies this stronger assumption such as functional form restrictions as well as potentially further restrictions on the distribution of the error term. An example is the assumption of independence of the set of covariates and the dummy identifying group membership (Fortin et al., 2011). In the RIF-OLS model, the detailed components can be estimated in the same way as in the detailed Oaxaca-Blinder decomposition at the mean. However, as in the Oaxaca-Blinder decomposition at the mean, the decomposition based on RIF-OLS changes according to the choice of the reference category (Reimers, 1983; Cotton, 1988; Neumark, 1988; Oaxaca and Ransom, 1994). We follow the standard case and use formal employment coefficients as the non-discriminatory wage structure. As in standard detailed Oaxaca-Blinder decompositions at the mean, the contribution of the single regressors to the components of the wage gap are then obtained also in the RIF-OLS framework.
+
