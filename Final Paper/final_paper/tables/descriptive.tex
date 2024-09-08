@@ -1,52 +1,55 @@
-\begin{table}
-\centering
-\caption{Group Characteristics}
-\label{tab:overall_descriptive}
-\centering
-\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{
-\begin{tabular}[t]{>{}lcccc}
-\toprule
-\multicolumn{1}{c}{ } & \multicolumn{2}{c}{Informal Employment} & \multicolumn{2}{c}{Formal Employment} \\
-\cmidrule(l{3pt}r{3pt}){2-3} \cmidrule(l{3pt}r{3pt}){4-5}
-Variables & 2008 & 2018 & 2008 & 2018\\
-\midrule
-\textbf{Household Size} & 5 (4, 7) & 5 (4, 6) & 4 (3, 6) & 4 (3, 6)\\
-\textbf{Age} & 29 (22, 38) & 32 (24, 41) & 36 (28, 45) & 36 (28, 45)\\
-\textbf{Experience} & 15 (8, 27) & 18 (8, 30) & 17 (10, 27) & 17 (8, 28)\\
-\textbf{Education} &  &  &  & \\
-\textbf{Illiterate} & 1,018 (23\%) & 978 (19\%) & 88 (3.7\%) & 47 (3.0\%)\\
-\addlinespace
-\textbf{Below\_primary} & 773 (18\%) & 935 (18\%) & 190 (8.0\%) & 73 (4.7\%)\\
-\textbf{Primary} & 1,169 (27\%) & 1,542 (29\%) & 332 (14\%) & 200 (13\%)\\
-\textbf{Tenth\_grade} & 731 (17\%) & 846 (16\%) & 597 (25\%) & 330 (21\%)\\
-\textbf{Secondary} & 336 (7.7\%) & 564 (11\%) & 502 (21\%) & 400 (26\%)\\
-\textbf{Bachelor} & 226 (5.2\%) & 308 (5.8\%) & 428 (18\%) & 318 (20\%)\\
-\addlinespace
-\textbf{Masters\_above} & 86 (2.0\%) & 99 (1.9\%) & 242 (10\%) & 187 (12\%)\\
-\textbf{Urban} & 3,068 (71\%) & 3,426 (65\%) & 1,786 (75\%) & 1,150 (74\%)\\
-\textbf{Married} & 3,112 (72\%) & 4,095 (78\%) & 2,013 (85\%) & 1,306 (84\%)\\
-\textbf{Female} & 991 (23\%) & 1,079 (20\%) & 536 (23\%) & 433 (28\%)\\
-\textbf{Hourly Wage} & 19 (13, 29) & 75 (50, 100) & 43 (27, 60) & 125 (78, 155)\\
-\addlinespace
-\textbf{Children} & 1 (0, 2) & 1 (0, 2) & 1 (0, 2) & 1 (0, 2)\\
-\textbf{Migrated For Job} & 1,260 (29\%) & 620 (12\%) & 920 (39\%) & 338 (22\%)\\
-\textbf{Total Chore Hours} & 0.43 (0.00, 1.57) & 0.30 (0.00, 1.29) & 0.57 (0.00, 1.86) & 0.56 (0.00, 2.00)\\
-\textbf{Job sector} &  &  &  & \\
-\textbf{Mining\_utility} & 114 (2.6\%) & 150 (2.8\%) & 71 (3.0\%) & 53 (3.4\%)\\
-\addlinespace
-\textbf{Construction} & 974 (22\%) & 2,264 (43\%) & 39 (1.6\%) & 35 (2.3\%)\\
-\textbf{Manufacturing} & 1,220 (28\%) & 782 (15\%) & 263 (11\%) & 126 (8.1\%)\\
-\textbf{Market\_services} & 1,109 (26\%) & 1,125 (21\%) & 469 (20\%) & 380 (24\%)\\
-\textbf{Non\_Market\_services} & 570 (13\%) & 833 (16\%) & 1,472 (62\%) & 935 (60\%)\\
-\textbf{Arts\_entertain} & 352 (8.1\%) & 118 (2.2\%) & 65 (2.7\%) & 26 (1.7\%)\\
-\addlinespace
-\textbf{Occupation} &  &  &  & \\
-\textbf{Elementary\_occupations} & 1,020 (24\%) & 1,711 (32\%) & 262 (11\%) & 132 (8.5\%)\\
-\textbf{Plant\_operator} & 380 (8.8\%) & 408 (7.7\%) & 110 (4.6\%) & 111 (7.1\%)\\
-\textbf{Agri\_trade} & 1,657 (38\%) & 1,766 (33\%) & 156 (6.6\%) & 44 (2.8\%)\\
-\textbf{Clerical\_sales} & 653 (15\%) & 628 (12\%) & 616 (26\%) & 375 (24\%)\\
-\addlinespace
-\textbf{Managers} & 629 (14\%) & 759 (14\%) & 1,235 (52\%) & 893 (57\%)\\
-\bottomrule
-\end{tabular}}
+\begin{table}[htbp]
+	\centering
+	\footnotesize % Increase the font size
+	\caption{Group characteristics by year and employment type}
+	\label{tab: descriptiveoverall}
+	\renewcommand{\arraystretch}{0.8} % Increase the row height
+	\resizebox{\linewidth}{!}{
+		\begin{tabular}{lcccc}  % Changed [lcccc] to {lcccc}
+			\toprule
+			\multicolumn{1}{c}{ } & \multicolumn{2}{c}{2008} & \multicolumn{2}{c}{2018} \\
+			\cmidrule(l{3pt}r{3pt}){2-3} \cmidrule(l{3pt}r{3pt}){4-5}
+			\text{Variables} & Informal  & Formal& Informal & Formal\\ 
+			\midrule
+			\text{Household size} & 5  & 4 & 5 & 4 \\
+			\text{Age (in years)} & 29 & 36 & 32 & 36 \\
+			\text{Experience (in years)} & 15 & 17 & 18 & 17\\
+			\text{Education (in \%)} &  &  &  & \\
+			\hspace{1em}\text{Illiterate} & 23 & 3.7 & 19 & 3.0\\
+			\hspace{1em}\text{Below primary} & 18 & 8.0 & 18 & 4.7\\
+			\hspace{1em}\text{Primary} & 27 & 14 & 29 & 13\\
+			\hspace{1em}\text{Tenth grade} & 17 & 25 & 16 & 21\\
+			\hspace{1em}\text{Secondary} & 7.7 & 21 & 11 & 26\\
+			\hspace{1em}\text{Bachelor} & 5.2 & 18 & 5.8 & 20\\
+			\hspace{1em}\text{Masters and above} & 2 & 10 & 1.9 & 12\\
+			\text{Urban (in \%)} & 71 & 75 & 65 & 74\\
+			\text{Married (in \%)} & 72 & 85 & 78 & 84\\
+			\text{Female} & 23 & 23 & 20 & 28\\  
+			\text{Hourly wage (in Rupees)} & 19  & 43  & 75  & 125 \\
+			\text{No. of children} & 1  & 1  & 1  & 1 \\
+			\text{Migrated for job (in \%)} & 29 & 39 & 12 & 22\\
+			\text{Daily hours spent on household chores} & 0.43  & 0.57  & 0.30  & 0.56 \\
+			\text{Job sector (in \%)} &  &  &  & \\
+			\hspace{1em}\text{Mining\_utility} & 2.6 & 3.0 & 2.8 & 3.4\\
+			\hspace{1em}\text{Construction} & 22 & 1.6 & 43 & 2.3\\
+			\hspace{1em}\text{Manufacturing} & 28 & 11 & 15 & 8.1\\
+			\hspace{1em}\text{Market\_services} & 26 & 20 & 21 & 24\\
+			\hspace{1em}\text{Non\_Market\_services} & 13 & 62 & 16 & 60\\
+			\hspace{1em}\text{Arts\_entertain} & 8.1 & 2.7 & 2.2 & 1.7\\
+			\text{Occupation (in \%)} &  &  &  & \\
+			\hspace{1em}\text{Elementary\_occupations} & 24 & 11 & 32 & 8.5\\
+			\hspace{1em}\text{Plant\_operator} & 8.8 & 4.6 & 7.7 & 7.1\\
+			\hspace{1em}\text{Agri\_trade} & 38 & 6.6 & 33 & 2.8\\
+			\hspace{1em}\text{Clerical\_sales} & 15 & 26 & 12 & 24\\
+			\hspace{1em}\text{Managers} & 14 & 52 & 14 & 57\\
+			\bottomrule
+			\text{} & & & & \\
+			\text{No. of observation} & 4339& 2379 & 5272 & 1555\\
+			\bottomrule
+		\end{tabular}
+	}
+	\footnotesize{
+		\raggedleft
+		\textsuperscript {a} Notes: Author's calculations based on microdata from the 2008 and 2018 NLFS survey. 
+	}
 \end{table}
