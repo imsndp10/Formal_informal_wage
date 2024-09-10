@@ -10,15 +10,32 @@ The dependent variable in our study is the logarithm of the hourly income. The s
 
 We investigate the determinants of wage in our study through the lens of examining human capital variables, personal and household, job and employer characteristics. We focus on experience, experience squared, and education as human capital variables, as extensive literature highlights their significant association with wage levels (Becker, 1975; Borjas, 2005; Rosen, 1972; Mincer, 1974), including the number of years with an employer (Burdett and Cole, 2010). Personal and household characteristics such as gender, caste group, marital status, and the number of children are included, given their proven impact on wages (Bardasi and Taylor, 2008; Killewald and Gough, 2013; Becker, 1975). Job characteristics encompass occupation class, vocational training, migration for work, overtime, and total household chores, all identified as influential in previous research (Becker, 1975; Borjas, 2005). Employer characteristics are captured through the job sector by economic sectors, reflecting their significant role in wage determination (Becker, 1975; Borjas, 2005).
 
-
-\begin{figure}[tb] 
+\begin{figure}[tb]
 	\centering
-	\includegraphics[width = \textwidth]{class_5_classification}
-	\caption{Distribution of workers}
-	\label{fig:class5Classify}
+	\begin{minipage}[b]{0.48\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{industry_classification}
+		\caption{Distribution of workers \\ \smallskip {Industry Classification}}
+		\label{fig:industryClassify}
+	\end{minipage}
+	\hfill
+	\begin{minipage}[b]{0.48\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{occupation_classification}
+		\caption{Distribution of workers \\ \smallskip {Occupation Classification}}
+		\label{fig:occupationClassify}
+	\end{minipage}
 \end{figure}
 
-Figure \ref{fig:class5Classify} illustrates the percentage distribution of employees in the formal and informal employment based on the NSCO classification. In our study, we form occupation groups for the heterogeneity based on the same, where clerical sales, agriculture trade and plant operator are recoded as clerical occupation and as it is for the elementary and managers. We justify these groups by differences in the nature of tasks, required skills levels and ssociated wages. Elementary occupation involve routine, manual tasks with lower returns to education, clerical involves moderate level of trainings and education and managers involving high-level decision-making. Figure \ref{fig:yrsschooling} shows the distribution of years of schooling for the occupation groups as mentioned above, 
+
+%\begin{figure}[tb] 
+	%\centering
+	%\includegraphics[width = \textwidth]{class_5_classification}
+	%\caption{Distribution of workers}
+	%\label{fig:class5Classify}
+%\end{figure}
+
+Figure \ref{fig:class5Classify} illustrates the percentage distribution of employees in the formal and informal employment based on the NSCO classification. In our study, we form occupation groups for the heterogeneity based on the same, where clerical sales, agriculture trade and plant operator are recoded as clerical occupation and as it is for the elementary and managers. We justify these groups by differences in the nature of tasks, required skills levels and ssociated wages. Elementary occupation involve routine, manual tasks with lower returns to education, clerical involves moderate level of trainings and education and managers involving high-level decision-making.
  
  
  
@@ -26,15 +43,29 @@ Figure \ref{fig:class5Classify} illustrates the percentage distribution of emplo
  \input{tables/descriptive.tex}
  
  
+\begin{figure}[h]
+	\centering
+	\begin{minipage}[b]{0.48\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{gap_combined_plot}
+		\caption{Gap plot}
+		\label{fig:gapcombined}
+	\end{minipage}
+	\hfill
+	\begin{minipage}[b]{0.48\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{wage_combined_plot}
+		\caption{Wage plot}
+		\label{fig:wagecombined}
+	\end{minipage}
+\end{figure}
  
- 
- 
- \begin{figure}[tb] 
- 	\centering
- 	\includegraphics[width=\textwidth]{log_hourly_density_wages}
- 	\caption{Log hourly density wages}
- 	\label{fig:loghourlydensitywages}
- \end{figure}
+ %\begin{figure}[tb] 
+ 	%\centering
+ 	%\includegraphics[width=\textwidth]{log_hourly_density_wages}
+ 	%\caption{Log hourly density wages}
+ 	%\label{fig:loghourlydensitywages}
+ %\end{figure}
  
             
    
@@ -42,7 +73,7 @@ Figure \ref{fig:loghourlydensitywages} illustrates the kernel density estimates 
 
  The figure \ref{fig:wagegap} illustrates the difference in log wages between formal and informal employment, highlighting the disparity in earnings across the wage distribution. The dashed line in the figure \ref{fig:wagegap} represents the average wage gap, providing a benchmark for the overall disparity between the two employment types. In the figure \ref{fig:rawwage} and \ref{fig:wagegap}, the wage differentials between the sectors is positive throughout the entire wage distribution for both year, with a large gap at the 25th to 60th quantile for 2008, and 35th to 70th quantile for the year 2018. 
 
- Table \ref{tab:overall_descriptive} displays the demographic, household, educational and job characteristics of formal and informal employment for the year 2008 and 2018 used in the earnings and selection equations for the whole, whereas table  displays these characteristics seperately for elementary, clerical and manager occupations respectively.  In terms of education, we can see that informal employment has a higher percentages of individuals with less than tenth grade education (85 \%) in 2008 and (82\%) in 2018, whereas the formal employment has 49\% in 2008 and 58\%  in 2018 for people with secondary education and above. The education levels across different occupation groups show distinct differences over the years and between employment types. In 2008, the Clerical group had 91\% of employees below the 10th grade in informal and 64.3\% in formal employment, slightly improving to 88\% and 66\% by 2018. The Elementary group consistently had the highest percentages, with 99.7\% in informal and 98\% in formal employment in 2008, decreasing to 98\% and 94.7\% in 2018. Managers had the lowest percentages, with 37.2\% below the 10th grade in informal and 31.2\% in formal employment in 2008, which significantly improved to 19.4\% and 19\% in 2018. 
+ Table \ref{tab: descriptiveoverall} displays the demographic, household, educational and job characteristics of formal and informal employment for the year 2008 and 2018 used in the earnings and selection equations for the whole, whereas table  displays these characteristics seperately for elementary, clerical and manager occupations respectively.  In terms of education, we can see that informal employment has a higher percentages of individuals with less than tenth grade education (85 \%) in 2008 and (82\%) in 2018, whereas the formal employment has 49\% in 2008 and 58\%  in 2018 for people with secondary education and above. The education levels across different occupation groups show distinct differences over the years and between employment types. In 2008, the Clerical group had 91\% of employees below the 10th grade in informal and 64.3\% in formal employment, slightly improving to 88\% and 66\% by 2018. The Elementary group consistently had the highest percentages, with 99.7\% in informal and 98\% in formal employment in 2008, decreasing to 98\% and 94.7\% in 2018. Managers had the lowest percentages, with 37.2\% below the 10th grade in informal and 31.2\% in formal employment in 2008, which significantly improved to 19.4\% and 19\% in 2018. 
 
 Informal employees are on average younger than formal employees across the occupation class, with manager and elementary groups showing dictinct age differences. Managers in Informal employment have a distinct number of female employees with 40\% in 2008 and 49\% in 2018, which is higher than average in comparison to elementary and clerial workers. Since, experience is derived from age, they both follow the similar distribution across all the groups. Elementary employees are less likely to be in urban areas in compared to rest of the groups, whereas, informal employees in 2018 are less likely to be in urban areas compared to rest of the groups. Employees who migrated for job are consistently higher in the year 2008 across all the groups and the higher percentage of employees who have migrated have been involved in formal employment. Interestingly, managers have higher total chores hour followed by elementary workers and clerical workers. Managers are also the only group to  have the household chores hour increased from year 2008 to 2018. 
 
