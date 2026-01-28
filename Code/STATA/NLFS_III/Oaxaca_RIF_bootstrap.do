@@ -1,3 +1,8 @@
+
+cd "E:\Formal Informal wage\Formal_informal_wage\Data\Cleaned\Pooled" 
+
+
+
 * Clear any existing data and load the new dataset
 clear
 set more off
@@ -35,7 +40,7 @@ local years 2008 2018
 local quantiles 10 25 50 75 90
 
 * Initialize the Excel file
-local excel_file "rif_test.xlsx"
+local excel_file "oaxaca_rif_lowskill_bootstrap1.xlsx"
 putexcel set `excel_file', replace
 
 * Prepare headers for the sheets

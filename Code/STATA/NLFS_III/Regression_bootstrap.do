@@ -1,3 +1,5 @@
+cd "E:\Formal Informal wage\Formal_informal_wage\Data\Cleaned\Pooled"
+
 * Clear any existing data and load the new dataset
 clear
 set more off
@@ -31,10 +33,10 @@ global job_sector "job_sector_Mining_utility job_sector_Construction job_sector_
 * Define local macros for your analysis
 local formal_employment 0 1 
 local years 2008 2018
-local quantiles 10 25 50 75 90
+local quantiles 5 10 15 20 25 30 35 40 45 50 55 60 65 70 75 80 85 90 95
 
 * Initialize the Excel file
-local excel_file "regression_test.xlsx"
+local excel_file "regression_bootstrap.xlsx"
 putexcel set `excel_file', replace
 
 * Write the header row
